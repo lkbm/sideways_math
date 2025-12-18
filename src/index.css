@@ -1,0 +1,612 @@
+/* Sideways Math - Cryptarithmetic Puzzle Game */
+
+:root {
+  --color-green: #6aaa64;
+  --color-yellow: #c9b458;
+  --color-gray: #787c7e;
+  --color-light-gray: #d3d6da;
+  --color-bg: #ffffff;
+  --color-text: #1a1a1b;
+  --color-selected: #85c0f9;
+  --color-primary: #538d4e;
+  --color-primary-hover: #4a7d45;
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+  background: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Game container */
+.game {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-height: 100vh;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--color-light-gray);
+  padding-bottom: 0.5rem;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.help-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--color-light-gray);
+  background: transparent;
+  font-size: 1.25rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.help-btn:hover {
+  background: var(--color-light-gray);
+}
+
+/* Loading state */
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: var(--color-gray);
+  font-size: 1.1rem;
+}
+
+/* Equation display - vertical arithmetic style */
+.equation-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0;
+  gap: 4px;
+}
+
+.equation-row {
+  display: flex;
+  align-items: center;
+}
+
+.vertical-operator {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: var(--color-gray);
+  width: 30px;
+  text-align: center;
+}
+
+.vertical-operator-spacer {
+  width: 30px;
+}
+
+.equation-line {
+  height: 3px;
+  background: var(--color-text);
+  margin: 4px 0;
+}
+
+.word {
+  display: flex;
+  gap: 4px;
+}
+
+.letter-tile-spacer {
+  width: 52px;
+  height: 62px;
+}
+
+/* Letter tiles */
+.letter-tile {
+  width: 52px;
+  height: 62px;
+  border: 2px solid var(--color-light-gray);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: var(--color-bg);
+  font-family: inherit;
+  transition: all 0.15s ease;
+  gap: 2px;
+}
+
+.letter-tile:hover:not(.disabled) {
+  border-color: #888;
+}
+
+.letter-tile.selected {
+  border-color: var(--color-selected);
+  box-shadow: 0 0 0 3px rgba(133, 192, 249, 0.4);
+}
+
+.letter-tile.disabled {
+  cursor: default;
+  opacity: 0.9;
+}
+
+.letter-tile .letter {
+  font-size: 1.4rem;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.letter-tile .digit {
+  font-size: 0.9rem;
+  color: #555;
+  line-height: 1;
+}
+
+/* Feedback colors */
+.feedback-green {
+  background: var(--color-green);
+  border-color: var(--color-green);
+  color: white;
+}
+
+.feedback-green .digit {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.feedback-yellow {
+  background: var(--color-yellow);
+  border-color: var(--color-yellow);
+  color: white;
+}
+
+.feedback-yellow .digit {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.feedback-gray {
+  background: var(--color-gray);
+  border-color: var(--color-gray);
+  color: white;
+}
+
+.feedback-gray .digit {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Mapping panel */
+.mapping-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.mapping-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-light-gray);
+  border-radius: 6px;
+  cursor: pointer;
+  background: var(--color-bg);
+  font-family: inherit;
+  font-size: 1rem;
+  transition: all 0.15s ease;
+}
+
+.mapping-row:hover:not(.disabled) {
+  border-color: #888;
+}
+
+.mapping-row.selected {
+  border-color: var(--color-selected);
+  box-shadow: 0 0 0 2px rgba(133, 192, 249, 0.4);
+}
+
+.mapping-row.disabled {
+  cursor: default;
+}
+
+.mapping-letter {
+  font-weight: bold;
+}
+
+.mapping-equals {
+  color: var(--color-gray);
+}
+
+.mapping-digit {
+  font-weight: 600;
+  min-width: 1ch;
+  text-align: center;
+}
+
+/* Number pad */
+.number-pad {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.digit-btn {
+  aspect-ratio: 1;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border: 1px solid var(--color-light-gray);
+  border-radius: 6px;
+  background: var(--color-bg);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+}
+
+.digit-btn:hover:not(:disabled) {
+  background: #f0f0f0;
+  border-color: #888;
+}
+
+.digit-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.digit-btn.used {
+  background: #e8e8e8;
+  color: #888;
+}
+
+.digit-btn.eliminated {
+  background: var(--color-gray);
+  color: white;
+  border-color: var(--color-gray);
+}
+
+/* Game controls */
+.game-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.guess-counter {
+  font-size: 0.95rem;
+  color: var(--color-gray);
+}
+
+.control-buttons {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.btn-primary:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: #e8e8e8;
+  color: var(--color-text);
+}
+
+.btn-secondary:hover {
+  background: #ddd;
+}
+
+/* Guess history */
+.guess-history {
+  border-top: 1px solid var(--color-light-gray);
+  padding-top: 1rem;
+}
+
+.guess-history h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.9rem;
+  color: var(--color-gray);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.guess-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.guess-number {
+  font-size: 0.85rem;
+  color: var(--color-gray);
+  width: 2rem;
+}
+
+.guess-tiles {
+  display: flex;
+  gap: 4px;
+}
+
+.history-tile {
+  width: 40px;
+  height: 48px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  gap: 1px;
+}
+
+.history-letter {
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.history-digit {
+  font-size: 0.75rem;
+  opacity: 0.9;
+}
+
+/* Difficulty selector */
+.difficulty-selector {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.difficulty-selector h3 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.25rem;
+}
+
+.difficulty-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.difficulty-btn {
+  padding: 1rem 1.5rem;
+  border: 2px solid var(--color-light-gray);
+  border-radius: 8px;
+  background: var(--color-bg);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.difficulty-btn:hover {
+  border-color: var(--color-primary);
+  background: rgba(83, 141, 78, 0.05);
+}
+
+.difficulty-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.difficulty-desc {
+  font-size: 0.85rem;
+  color: var(--color-gray);
+}
+
+.difficulty-easy:hover {
+  border-color: var(--color-green);
+  background: rgba(106, 170, 100, 0.05);
+}
+
+.difficulty-medium:hover {
+  border-color: var(--color-yellow);
+  background: rgba(201, 180, 88, 0.05);
+}
+
+.difficulty-hard:hover {
+  border-color: #d93025;
+  background: rgba(217, 48, 37, 0.05);
+}
+
+/* Modals */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 100;
+}
+
+.modal {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+
+.modal h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+}
+
+.win-message {
+  font-size: 1.1rem;
+  color: var(--color-green);
+  margin-bottom: 1.5rem;
+}
+
+.lose-message {
+  margin-bottom: 1.5rem;
+}
+
+.lose-message p {
+  margin: 0.5rem 0;
+}
+
+.solution {
+  font-family: monospace;
+  font-size: 1rem;
+  background: #f5f5f5;
+  padding: 0.75rem;
+  border-radius: 6px;
+  word-break: break-word;
+}
+
+.modal-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Help modal */
+.help-modal {
+  text-align: left;
+  max-width: 450px;
+}
+
+.help-modal h2 {
+  text-align: center;
+}
+
+.help-content {
+  margin-bottom: 1.5rem;
+}
+
+.help-content h3 {
+  margin: 1.25rem 0 0.5rem 0;
+  font-size: 1rem;
+}
+
+.help-content p {
+  margin: 0.5rem 0;
+  line-height: 1.5;
+}
+
+.help-content ul {
+  margin: 0.5rem 0;
+  padding-left: 1.25rem;
+}
+
+.help-content li {
+  margin: 0.25rem 0;
+  line-height: 1.4;
+}
+
+.example-puzzle {
+  font-family: monospace;
+  font-size: 1.1rem;
+  background: #f5f5f5;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.feedback-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.legend-tile {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.9rem;
+  color: white;
+  font-weight: 600;
+}
+
+.help-modal .btn {
+  width: 100%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 400px) {
+  .letter-tile {
+    width: 44px;
+    height: 54px;
+  }
+
+  .letter-tile .letter {
+    font-size: 1.2rem;
+  }
+
+  .letter-tile .digit {
+    font-size: 0.8rem;
+  }
+
+  .number-pad {
+    max-width: 280px;
+  }
+
+  .digit-btn {
+    font-size: 1.25rem;
+  }
+
+  .history-tile {
+    width: 34px;
+    height: 42px;
+  }
+}
