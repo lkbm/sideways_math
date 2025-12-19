@@ -16,7 +16,7 @@ app.get("/api/state/:key", async (c) => {
 
 app.put("/api/state/:key", async (c) => {
 	const key = c.req.param("key");
-	const { value } = await c.req.json();
+	const { value } = await c.req.json<{ value: string }>();
 	await c.env.SIDEWAYSARITHMETIC.put(key, value);
 	return c.json({ success: true });
 });

@@ -43,7 +43,7 @@ export function HelpModal({ onClose }: HelpModalProps) {
             </div>
             <div class="legend-item">
               <span class="legend-tile feedback-gray">C=9</span>
-              <span>The digit 9 isn't used in the solution at all.</span>
+              <span>The digit 9 is not used in the solution at all.</span>
             </div>
           </div>
         </div>

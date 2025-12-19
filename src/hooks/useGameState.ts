@@ -20,6 +20,7 @@ export function useGameState() {
   // Start a new game on mount
   useEffect(() => {
     startNewGame('medium');
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- startNewGame is stable, adding it would cause infinite re-renders
   }, []);
 
   // Select a letter for digit assignment
