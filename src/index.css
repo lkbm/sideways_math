@@ -73,94 +73,188 @@ body {
     0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* Ball styles - starting positions off-screen at bottom */
 .ball-red {
-  width: 60px;
-  height: 60px;
+  width: 55px;
+  height: 55px;
   background: radial-gradient(circle at 30% 30%, #ff6b6b, var(--ball-red) 50%, #b82d3a);
-  left: 8%;
-  animation: bounce-1 4.5s ease-in-out infinite;
+  left: 5%;
+  animation: arc-right-1 18s ease-in-out infinite;
   animation-delay: 0s;
 }
 
 .ball-blue {
-  width: 55px;
-  height: 55px;
+  width: 50px;
+  height: 50px;
   background: radial-gradient(circle at 30% 30%, #6b9dc4, var(--ball-blue) 50%, #2d5a7b);
-  left: 75%;
-  animation: bounce-2 5.2s ease-in-out infinite;
-  animation-delay: 1.5s;
+  right: 8%;
+  left: auto;
+  animation: arc-left-1 22s ease-in-out infinite;
+  animation-delay: 6s;
 }
 
 .ball-yellow {
-  width: 50px;
-  height: 50px;
+  width: 45px;
+  height: 45px;
   background: radial-gradient(circle at 30% 30%, #ffcc80, var(--ball-yellow) 50%, #c47b30);
-  left: 88%;
-  animation: bounce-3 4.8s ease-in-out infinite;
-  animation-delay: 3s;
+  left: 15%;
+  animation: arc-right-2 20s ease-in-out infinite;
+  animation-delay: 12s;
 }
 
 .ball-red-2 {
-  width: 45px;
-  height: 45px;
+  width: 48px;
+  height: 48px;
   background: radial-gradient(circle at 30% 30%, #ff6b6b, var(--ball-red) 50%, #b82d3a);
-  left: 25%;
-  animation: bounce-4 5.5s ease-in-out infinite;
-  animation-delay: 2s;
+  right: 15%;
+  left: auto;
+  animation: arc-left-2 25s ease-in-out infinite;
+  animation-delay: 4s;
 }
 
 .ball-blue-2 {
   width: 52px;
   height: 52px;
   background: radial-gradient(circle at 30% 30%, #6b9dc4, var(--ball-blue) 50%, #2d5a7b);
-  left: 45%;
-  animation: bounce-5 4.2s ease-in-out infinite;
-  animation-delay: 0.5s;
+  left: 35%;
+  animation: arc-right-3 24s ease-in-out infinite;
+  animation-delay: 16s;
 }
 
-/* Bounce animations - varying heights and slight horizontal drift */
-@keyframes bounce-1 {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-75vh) translateX(20px) rotate(180deg);
-  }
-}
+/* Arc animations - parabolic paths flying across at angles */
 
-@keyframes bounce-2 {
+/* Arcing from bottom-left to upper-right and back down */
+@keyframes arc-right-1 {
   0%, 100% {
-    transform: translateY(0) rotate(0deg);
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  25% {
+    transform: translate(15vw, -70vh) rotate(180deg);
   }
   50% {
-    transform: translateY(-65vh) translateX(-15px) rotate(-150deg);
+    transform: translate(30vw, -85vh) rotate(360deg);
   }
-}
-
-@keyframes bounce-3 {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
+  75% {
+    transform: translate(45vw, -70vh) rotate(540deg);
   }
-  50% {
-    transform: translateY(-55vh) translateX(-25px) rotate(200deg);
+  95% {
+    opacity: 1;
   }
-}
-
-@keyframes bounce-4 {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-70vh) translateX(30px) rotate(-180deg);
+  99% {
+    transform: translate(60vw, 0) rotate(720deg);
+    opacity: 0;
   }
 }
 
-@keyframes bounce-5 {
+/* Arcing from bottom-right to upper-left and back down */
+@keyframes arc-left-1 {
   0%, 100% {
-    transform: translateY(0) rotate(0deg);
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  25% {
+    transform: translate(-12vw, -60vh) rotate(-150deg);
   }
   50% {
-    transform: translateY(-60vh) translateX(-10px) rotate(160deg);
+    transform: translate(-25vw, -75vh) rotate(-300deg);
+  }
+  75% {
+    transform: translate(-38vw, -60vh) rotate(-450deg);
+  }
+  95% {
+    opacity: 1;
+  }
+  99% {
+    transform: translate(-50vw, 0) rotate(-600deg);
+    opacity: 0;
+  }
+}
+
+/* Steeper arc going right */
+@keyframes arc-right-2 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  25% {
+    transform: translate(10vw, -65vh) rotate(120deg);
+  }
+  50% {
+    transform: translate(20vw, -80vh) rotate(240deg);
+  }
+  75% {
+    transform: translate(30vw, -65vh) rotate(360deg);
+  }
+  95% {
+    opacity: 1;
+  }
+  99% {
+    transform: translate(40vw, 0) rotate(480deg);
+    opacity: 0;
+  }
+}
+
+/* Wider arc going left */
+@keyframes arc-left-2 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  25% {
+    transform: translate(-18vw, -55vh) rotate(-180deg);
+  }
+  50% {
+    transform: translate(-35vw, -70vh) rotate(-360deg);
+  }
+  75% {
+    transform: translate(-52vw, -55vh) rotate(-540deg);
+  }
+  95% {
+    opacity: 1;
+  }
+  99% {
+    transform: translate(-70vw, 0) rotate(-720deg);
+    opacity: 0;
+  }
+}
+
+/* Medium arc going right */
+@keyframes arc-right-3 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  25% {
+    transform: translate(8vw, -50vh) rotate(90deg);
+  }
+  50% {
+    transform: translate(18vw, -65vh) rotate(180deg);
+  }
+  75% {
+    transform: translate(28vw, -50vh) rotate(270deg);
+  }
+  95% {
+    opacity: 1;
+  }
+  99% {
+    transform: translate(38vw, 0) rotate(360deg);
+    opacity: 0;
   }
 }
 
@@ -169,13 +263,18 @@ body {
    ======================================== */
 
 .game {
-  max-width: 540px;
-  margin: 2rem auto;
-  padding: 2rem 2.5rem 2rem 3.5rem;
+  /* 8.5 x 11 aspect ratio (US Letter) */
+  aspect-ratio: 8.5 / 11;
+  height: calc(100vh - 3rem);
+  max-height: 900px;
+  width: auto;
+  max-width: calc((100vh - 3rem) * 8.5 / 11);
+  margin: 1.5rem auto;
+  padding: 2rem 3rem 2rem 4rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  min-height: calc(100vh - 4rem);
+  overflow-y: auto;
   position: relative;
   z-index: 1;
 
@@ -938,10 +1037,17 @@ body {
    RESPONSIVE ADJUSTMENTS
    ======================================== */
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
   .game {
+    /* On mobile, fill the screen instead of maintaining aspect ratio */
+    aspect-ratio: auto;
+    height: auto;
+    max-height: none;
+    width: auto;
+    max-width: none;
     margin: 1rem;
     padding: 1.5rem 2rem 1.5rem 3rem;
+    min-height: calc(100vh - 2rem);
   }
 
   .letter-tile {
