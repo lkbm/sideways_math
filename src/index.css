@@ -73,14 +73,16 @@ body {
     0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Ball styles - starting positions off-screen at bottom */
+/* Ball styles - starting positions off-screen at bottom
+   Each ball has a 30s total cycle: ~3s visible arc + ~27s hidden waiting
+   Staggered at 7s, 17s, 29s offsets for ~10s between appearances */
 .ball-red {
   width: 55px;
   height: 55px;
   background: radial-gradient(circle at 30% 30%, #ff6b6b, var(--ball-red) 50%, #b82d3a);
   left: 5%;
-  animation: arc-right-1 18s ease-in-out infinite;
-  animation-delay: 0s;
+  animation: arc-right-1 30s linear infinite;
+  animation-delay: 7s;
 }
 
 .ball-blue {
@@ -89,8 +91,8 @@ body {
   background: radial-gradient(circle at 30% 30%, #6b9dc4, var(--ball-blue) 50%, #2d5a7b);
   right: 8%;
   left: auto;
-  animation: arc-left-1 22s ease-in-out infinite;
-  animation-delay: 6s;
+  animation: arc-left-1 30s linear infinite;
+  animation-delay: 17s;
 }
 
 .ball-yellow {
@@ -98,164 +100,59 @@ body {
   height: 45px;
   background: radial-gradient(circle at 30% 30%, #ffcc80, var(--ball-yellow) 50%, #c47b30);
   left: 15%;
-  animation: arc-right-2 20s ease-in-out infinite;
-  animation-delay: 12s;
+  animation: arc-right-2 30s linear infinite;
+  animation-delay: 29s;
 }
 
-.ball-red-2 {
-  width: 48px;
-  height: 48px;
-  background: radial-gradient(circle at 30% 30%, #ff6b6b, var(--ball-red) 50%, #b82d3a);
-  right: 15%;
-  left: auto;
-  animation: arc-left-2 25s ease-in-out infinite;
-  animation-delay: 4s;
-}
+/* Arc animations - ball visible for ~10% of cycle, hidden rest of time
+   Using 30s total duration, arc takes 0-10% (3s), then waits off-screen */
 
-.ball-blue-2 {
-  width: 52px;
-  height: 52px;
-  background: radial-gradient(circle at 30% 30%, #6b9dc4, var(--ball-blue) 50%, #2d5a7b);
-  left: 35%;
-  animation: arc-right-3 24s ease-in-out infinite;
-  animation-delay: 16s;
-}
-
-/* Arc animations - parabolic paths flying across at angles */
-
-/* Arcing from bottom-left to upper-right and back down */
+/* Arcing from bottom-left to upper-right */
 @keyframes arc-right-1 {
-  0%, 100% {
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 0;
-  }
-  5% {
-    opacity: 1;
-  }
-  25% {
-    transform: translate(15vw, -70vh) rotate(180deg);
-  }
-  50% {
-    transform: translate(30vw, -85vh) rotate(360deg);
-  }
-  75% {
-    transform: translate(45vw, -70vh) rotate(540deg);
-  }
-  95% {
-    opacity: 1;
-  }
-  99% {
-    transform: translate(60vw, 0) rotate(720deg);
-    opacity: 0;
-  }
+  0% { transform: translate(0, 0) rotate(0deg); }
+  1% { transform: translate(6vw, -45vh) rotate(72deg); }
+  2% { transform: translate(12vw, -72vh) rotate(144deg); }
+  3% { transform: translate(18vw, -86vh) rotate(216deg); }
+  4% { transform: translate(24vw, -90vh) rotate(288deg); }
+  5% { transform: translate(30vw, -86vh) rotate(360deg); }
+  6% { transform: translate(36vw, -72vh) rotate(432deg); }
+  7% { transform: translate(42vw, -50vh) rotate(504deg); }
+  8% { transform: translate(48vw, -25vh) rotate(576deg); }
+  9% { transform: translate(54vw, -5vh) rotate(648deg); }
+  10% { transform: translate(60vw, 20vh) rotate(720deg); }
+  10.1%, 100% { transform: translate(0, 100vh) rotate(720deg); }
 }
 
-/* Arcing from bottom-right to upper-left and back down */
+/* Arcing from bottom-right to upper-left */
 @keyframes arc-left-1 {
-  0%, 100% {
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 0;
-  }
-  5% {
-    opacity: 1;
-  }
-  25% {
-    transform: translate(-12vw, -60vh) rotate(-150deg);
-  }
-  50% {
-    transform: translate(-25vw, -75vh) rotate(-300deg);
-  }
-  75% {
-    transform: translate(-38vw, -60vh) rotate(-450deg);
-  }
-  95% {
-    opacity: 1;
-  }
-  99% {
-    transform: translate(-50vw, 0) rotate(-600deg);
-    opacity: 0;
-  }
+  0% { transform: translate(0, 0) rotate(0deg); }
+  1% { transform: translate(-5vw, -40vh) rotate(-60deg); }
+  2% { transform: translate(-10vw, -65vh) rotate(-120deg); }
+  3% { transform: translate(-15vw, -80vh) rotate(-180deg); }
+  4% { transform: translate(-20vw, -85vh) rotate(-240deg); }
+  5% { transform: translate(-25vw, -80vh) rotate(-300deg); }
+  6% { transform: translate(-30vw, -65vh) rotate(-360deg); }
+  7% { transform: translate(-35vw, -45vh) rotate(-420deg); }
+  8% { transform: translate(-40vw, -20vh) rotate(-480deg); }
+  9% { transform: translate(-45vw, -2vh) rotate(-540deg); }
+  10% { transform: translate(-50vw, 20vh) rotate(-600deg); }
+  10.1%, 100% { transform: translate(0, 100vh) rotate(-600deg); }
 }
 
 /* Steeper arc going right */
 @keyframes arc-right-2 {
-  0%, 100% {
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 0;
-  }
-  5% {
-    opacity: 1;
-  }
-  25% {
-    transform: translate(10vw, -65vh) rotate(120deg);
-  }
-  50% {
-    transform: translate(20vw, -80vh) rotate(240deg);
-  }
-  75% {
-    transform: translate(30vw, -65vh) rotate(360deg);
-  }
-  95% {
-    opacity: 1;
-  }
-  99% {
-    transform: translate(40vw, 0) rotate(480deg);
-    opacity: 0;
-  }
-}
-
-/* Wider arc going left */
-@keyframes arc-left-2 {
-  0%, 100% {
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 0;
-  }
-  5% {
-    opacity: 1;
-  }
-  25% {
-    transform: translate(-18vw, -55vh) rotate(-180deg);
-  }
-  50% {
-    transform: translate(-35vw, -70vh) rotate(-360deg);
-  }
-  75% {
-    transform: translate(-52vw, -55vh) rotate(-540deg);
-  }
-  95% {
-    opacity: 1;
-  }
-  99% {
-    transform: translate(-70vw, 0) rotate(-720deg);
-    opacity: 0;
-  }
-}
-
-/* Medium arc going right */
-@keyframes arc-right-3 {
-  0%, 100% {
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 0;
-  }
-  5% {
-    opacity: 1;
-  }
-  25% {
-    transform: translate(8vw, -50vh) rotate(90deg);
-  }
-  50% {
-    transform: translate(18vw, -65vh) rotate(180deg);
-  }
-  75% {
-    transform: translate(28vw, -50vh) rotate(270deg);
-  }
-  95% {
-    opacity: 1;
-  }
-  99% {
-    transform: translate(38vw, 0) rotate(360deg);
-    opacity: 0;
-  }
+  0% { transform: translate(0, 0) rotate(0deg); }
+  1% { transform: translate(4vw, -42vh) rotate(48deg); }
+  2% { transform: translate(8vw, -68vh) rotate(96deg); }
+  3% { transform: translate(12vw, -82vh) rotate(144deg); }
+  4% { transform: translate(16vw, -88vh) rotate(192deg); }
+  5% { transform: translate(20vw, -85vh) rotate(240deg); }
+  6% { transform: translate(24vw, -72vh) rotate(288deg); }
+  7% { transform: translate(28vw, -52vh) rotate(336deg); }
+  8% { transform: translate(32vw, -28vh) rotate(384deg); }
+  9% { transform: translate(36vw, -6vh) rotate(432deg); }
+  10% { transform: translate(40vw, 20vh) rotate(480deg); }
+  10.1%, 100% { transform: translate(0, 100vh) rotate(480deg); }
 }
 
 /* ========================================
@@ -283,13 +180,11 @@ body {
     /* Red margin line */
     linear-gradient(to right, transparent 0, transparent 40px, var(--paper-margin) 40px, var(--paper-margin) 42px, transparent 42px),
     /* Blue horizontal lines */
-    repeating-linear-gradient(
-      to bottom,
+    repeating-linear-gradient(to bottom,
       transparent 0,
       transparent 31px,
       var(--paper-lines) 31px,
-      var(--paper-lines) 32px
-    ),
+      var(--paper-lines) 32px),
     /* Paper background */
     var(--paper-bg);
 
@@ -317,15 +212,13 @@ body {
   bottom: 20px;
   width: 16px;
   background:
-    repeating-linear-gradient(
-      to bottom,
+    repeating-linear-gradient(to bottom,
       transparent 0,
       transparent 28px,
       #b8a888 28px,
       #b8a888 32px,
       transparent 32px,
-      transparent 60px
-    );
+      transparent 60px);
   border-radius: 8px;
 }
 
@@ -897,13 +790,11 @@ body {
 .modal {
   background:
     /* Blue horizontal lines */
-    repeating-linear-gradient(
-      to bottom,
+    repeating-linear-gradient(to bottom,
       transparent 0,
       transparent 27px,
       var(--paper-lines) 27px,
-      var(--paper-lines) 28px
-    ),
+      var(--paper-lines) 28px),
     var(--paper-bg);
   border-radius: 8px;
   padding: 2rem;
@@ -1076,11 +967,20 @@ body {
     height: 44px;
   }
 
-  .ball-red { width: 50px; height: 50px; }
-  .ball-blue { width: 45px; height: 45px; }
-  .ball-yellow { width: 40px; height: 40px; }
-  .ball-red-2 { width: 38px; height: 38px; }
-  .ball-blue-2 { width: 42px; height: 42px; }
+  .ball-red {
+    width: 50px;
+    height: 50px;
+  }
+
+  .ball-blue {
+    width: 45px;
+    height: 45px;
+  }
+
+  .ball-yellow {
+    width: 40px;
+    height: 40px;
+  }
 }
 
 @media (max-width: 380px) {
