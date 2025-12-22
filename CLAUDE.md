@@ -47,3 +47,6 @@ npm run preview      # Preview production build
 
 ## TODOs
 * School-like styling?
+ - Maybe the problems look like they're on notebook paper
+ - Bounding balls in the background. (Wayside School playground had ~8inch rubber balls: red, blue, yellow. They bounce different heights.)
+* Music: bouncy, Commander Keen: Goodbye Galaxy-like music.
