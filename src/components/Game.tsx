@@ -39,9 +39,13 @@ export function Game() {
   // Loading state
   if (state.gameStatus === 'loading' || !state.puzzle) {
     return (
-      <div class="game">
-        <Header onHelpClick={() => setShowHelp(true)} />
-        <div class="loading">Generating puzzle...</div>
+      <div class="game-wrapper">
+        <div class="game">
+          <div class="game-content">
+            <Header onHelpClick={() => setShowHelp(true)} />
+            <div class="loading">Generating puzzle...</div>
+          </div>
+        </div>
         {showHelp && <HelpModal onClose={() => setShowHelp(false)} />}
       </div>
     );
@@ -50,9 +54,13 @@ export function Game() {
   // Difficulty selection
   if (showDifficulty) {
     return (
-      <div class="game">
-        <Header onHelpClick={() => setShowHelp(true)} />
-        <DifficultySelector onSelect={handleNewGame} />
+      <div class="game-wrapper">
+        <div class="game">
+          <div class="game-content">
+            <Header onHelpClick={() => setShowHelp(true)} />
+            <DifficultySelector onSelect={handleNewGame} />
+          </div>
+        </div>
         {showHelp && <HelpModal onClose={() => setShowHelp(false)} />}
       </div>
     );
@@ -61,46 +69,50 @@ export function Game() {
   const isGameOver = state.gameStatus === 'won' || state.gameStatus === 'lost';
 
   return (
-    <div class="game">
-      <Header onHelpClick={() => setShowHelp(true)} />
+    <div class="game-wrapper">
+      <div class="game">
+        <div class="game-content">
+          <Header onHelpClick={() => setShowHelp(true)} />
 
-      <EquationDisplay
-        puzzle={state.puzzle}
-        currentGuess={state.currentGuess}
-        selectedLetter={state.selectedLetter}
-        feedback={derived.cumulativeFeedback}
-        onLetterClick={actions.selectLetter}
-        disabled={isGameOver}
-      />
+          <EquationDisplay
+            puzzle={state.puzzle}
+            currentGuess={state.currentGuess}
+            selectedLetter={state.selectedLetter}
+            feedback={derived.cumulativeFeedback}
+            onLetterClick={actions.selectLetter}
+            disabled={isGameOver}
+          />
 
-      <MappingPanel
-        letters={state.puzzle.letters}
-        currentGuess={state.currentGuess}
-        feedback={derived.cumulativeFeedback}
-        selectedLetter={state.selectedLetter}
-        onLetterClick={actions.selectLetter}
-        disabled={isGameOver}
-      />
+          <MappingPanel
+            letters={state.puzzle.letters}
+            currentGuess={state.currentGuess}
+            feedback={derived.cumulativeFeedback}
+            selectedLetter={state.selectedLetter}
+            onLetterClick={actions.selectLetter}
+            disabled={isGameOver}
+          />
 
-      <NumberPad
-        selectedLetter={state.selectedLetter}
-        usedDigits={derived.usedDigits}
-        eliminatedDigits={derived.eliminatedDigits}
-        onDigitClick={actions.assignDigit}
-      />
+          <NumberPad
+            selectedLetter={state.selectedLetter}
+            usedDigits={derived.usedDigits}
+            eliminatedDigits={derived.eliminatedDigits}
+            onDigitClick={actions.assignDigit}
+          />
 
-      <GameControls
-        canSubmit={derived.canSubmit}
-        guessCount={state.guessHistory.length}
-        maxGuesses={state.maxGuesses}
-        onSubmit={actions.submitGuess}
-        onClear={handleClear}
-      />
+          <GameControls
+            canSubmit={derived.canSubmit}
+            guessCount={state.guessHistory.length}
+            maxGuesses={state.maxGuesses}
+            onSubmit={actions.submitGuess}
+            onClear={handleClear}
+          />
 
-      <GuessHistory
-        history={state.guessHistory}
-        letters={state.puzzle.letters}
-      />
+          <GuessHistory
+            history={state.guessHistory}
+            letters={state.puzzle.letters}
+          />
+        </div>
+      </div>
 
       {isGameOver && (
         <GameEndModal

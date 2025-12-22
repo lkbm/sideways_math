@@ -159,18 +159,27 @@ body {
    NOTEBOOK PAPER CONTAINER
    ======================================== */
 
+/* Wrapper for the tilted paper effect */
+.game-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
 .game {
+  /* Tilt the paper slightly for a casual, handwritten feel */
+  transform: rotate(-3deg);
   /* 8.5 x 11 aspect ratio (US Letter) */
   aspect-ratio: 8.5 / 11;
   height: calc(100vh - 3rem);
   max-height: 900px;
   width: auto;
   max-width: calc((100vh - 3rem) * 8.5 / 11);
-  margin: 1.5rem auto;
   padding: 2rem 3rem 2rem 4rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
   overflow-y: auto;
   position: relative;
   z-index: 1;
@@ -220,6 +229,16 @@ body {
       transparent 32px,
       transparent 60px);
   border-radius: 8px;
+}
+
+/* Counter-rotate content - not fully upright for a handwritten feel */
+.game-content {
+  transform: rotate(1deg); /* Paper at -3deg, content at -2deg net */
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  height: 100%;
+  width: 100%;
 }
 
 /* ========================================
@@ -929,6 +948,10 @@ body {
    ======================================== */
 
 @media (max-width: 600px) {
+  .game-wrapper {
+    padding: 1rem;
+  }
+
   .game {
     /* On mobile, fill the screen instead of maintaining aspect ratio */
     aspect-ratio: auto;
@@ -936,9 +959,14 @@ body {
     max-height: none;
     width: auto;
     max-width: none;
-    margin: 1rem;
     padding: 1.5rem 2rem 1.5rem 3rem;
     min-height: calc(100vh - 2rem);
+    /* Reduce rotation on mobile for better fit */
+    transform: rotate(-2deg);
+  }
+
+  .game-content {
+    transform: rotate(1deg); /* Paper at -2deg, content at -1deg net */
   }
 
   .letter-tile {
