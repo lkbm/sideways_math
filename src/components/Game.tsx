@@ -1,6 +1,6 @@
 // Main game container that orchestrates all components
 
-import { useState } from 'preact/hooks';
+import { useState, useEffect } from 'preact/hooks';
 import type { Difficulty } from '../types';
 import { useGameState } from '../hooks/useGameState';
 import { EquationDisplay } from './EquationDisplay';
@@ -67,6 +67,32 @@ export function Game() {
   }
 
   const isGameOver = state.gameStatus === 'won' || state.gameStatus === 'lost';
+
+  // Handle keyboard input for digit assignment
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Only handle when a letter is selected and game is active
+      if (!state.selectedLetter || isGameOver) return;
+
+      // Check if it's a digit key (0-9)
+      if (e.key >= '0' && e.key <= '9') {
+        actions.assignDigit(parseInt(e.key, 10));
+      }
+
+      // Backspace to clear the selected letter's value
+      if (e.key === 'Backspace') {
+        actions.clearLetter(state.selectedLetter);
+      }
+
+      // Escape to deselect
+      if (e.key === 'Escape') {
+        actions.selectLetter(state.selectedLetter); // Toggle off
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [state.selectedLetter, isGameOver, actions]);
 
   return (
     <div class="game-wrapper">
