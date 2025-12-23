@@ -26,10 +26,19 @@ export function LetterTile({
     disabled && 'disabled'
   ].filter(Boolean).join(' ');
 
+  const handleFocus = (e: FocusEvent) => {
+    // Only trigger onClick on keyboard focus (Tab), not mouse focus
+    // Mouse clicks will trigger onClick directly via the click handler
+    if (e.relatedTarget !== null) {
+      onClick();
+    }
+  };
+
   return (
     <button
       class={classes}
       onClick={onClick}
+      onFocus={handleFocus}
       disabled={disabled}
       type="button"
     >
