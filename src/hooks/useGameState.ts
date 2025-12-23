@@ -62,8 +62,8 @@ export function useGameState() {
 
       return {
         ...s,
-        currentGuess: newGuess,
-        selectedLetter: null // Auto-deselect after assignment
+        currentGuess: newGuess
+        // Keep selectedLetter so user can backspace to correct
       };
     });
   }, []);

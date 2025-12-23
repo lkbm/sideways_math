@@ -48,4 +48,3 @@ npm run preview      # Preview production build
 ## TODOs
 * Make balls match Wayside School playground balls.
 * Music: bouncy, Commander Keen: Goodbye Galaxy-like music.
-* Input annoyance: Once I enter a digit, it deselects that tile, so to backaspace I have to re-select.
