@@ -27,8 +27,8 @@
   --font-body: 'Patrick Hand', cursive;
 
   /* Ball colors - Wayside School style */
+  --ball-green: #2d936c;
   --ball-red: #e63946;
-  --ball-blue: #457b9d;
   --ball-yellow: #f4a261;
 }
 
@@ -73,86 +73,161 @@ body {
     0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Ball styles - starting positions off-screen at bottom
-   Each ball has a 30s total cycle: ~3s visible arc + ~27s hidden waiting
-   Staggered at 7s, 17s, 29s offsets for ~10s between appearances */
+/* Ball styles - each color has different bounce characteristics
+   Green: highest/fastest bounce (the fun ball!)
+   Red: moderate bounce
+   Yellow: barely peeks on screen (the sad ball) */
+
+/* GREEN BALLS - bounce highest and fastest */
+.ball-green {
+  width: 50px;
+  height: 50px;
+  background: radial-gradient(circle at 30% 30%, #5fd9a4, var(--ball-green) 50%, #1a6b4a);
+}
+.ball-green-1 {
+  left: 8%;
+  animation: arc-green-high-1 27s linear infinite;
+  animation-delay: 2s;
+}
+.ball-green-2 {
+  right: 12%;
+  left: auto;
+  animation: arc-green-high-2 27s linear infinite;
+  animation-delay: 17s;
+}
+
+/* RED BALLS - moderate bounce */
 .ball-red {
   width: 55px;
   height: 55px;
   background: radial-gradient(circle at 30% 30%, #ff6b6b, var(--ball-red) 50%, #b82d3a);
+}
+.ball-red-1 {
   left: 5%;
-  animation: arc-right-1 30s linear infinite;
+  animation: arc-red-medium-1 30s linear infinite;
+  animation-delay: 12s;
+}
+.ball-red-2 {
+  right: 6%;
+  left: auto;
+  animation: arc-red-medium-2 30s linear infinite;
   animation-delay: 7s;
 }
 
-.ball-blue {
-  width: 50px;
-  height: 50px;
-  background: radial-gradient(circle at 30% 30%, #6b9dc4, var(--ball-blue) 50%, #2d5a7b);
-  right: 8%;
-  left: auto;
-  animation: arc-left-1 30s linear infinite;
-  animation-delay: 17s;
-}
-
+/* YELLOW BALLS - barely peek onto screen (the least fun ball) */
 .ball-yellow {
-  width: 45px;
-  height: 45px;
+  width: 42px;
+  height: 42px;
   background: radial-gradient(circle at 30% 30%, #ffcc80, var(--ball-yellow) 50%, #c47b30);
-  left: 15%;
-  animation: arc-right-2 30s linear infinite;
-  animation-delay: 29s;
+}
+.ball-yellow-1 {
+  left: 20%;
+  animation: arc-yellow-low-1 18s linear infinite;
+  animation-delay: 11s;
+}
+.ball-yellow-2 {
+  right: 18%;
+  left: auto;
+  animation: arc-yellow-low-2 18s linear infinite;
+  animation-delay: 14s;
 }
 
-/* Arc animations - ball visible for ~10% of cycle, hidden rest of time
-   Using 30s total duration, arc takes 0-10% (3s), then waits off-screen */
-
-/* Arcing from bottom-left to upper-right */
-@keyframes arc-right-1 {
+/* ----------------------------------------
+   GREEN BALL ANIMATIONS - High & Fast
+   Peak height: well above viewport (-120vh)
+   Duration: 24s cycle, 8% visible (~2s arc)
+   ---------------------------------------- */
+@keyframes arc-green-high-1 {
   0% { transform: translate(0, 0) rotate(0deg); }
-  1% { transform: translate(6vw, -45vh) rotate(72deg); }
-  2% { transform: translate(12vw, -72vh) rotate(144deg); }
-  3% { transform: translate(18vw, -86vh) rotate(216deg); }
-  4% { transform: translate(24vw, -90vh) rotate(288deg); }
-  5% { transform: translate(30vw, -86vh) rotate(360deg); }
-  6% { transform: translate(36vw, -72vh) rotate(432deg); }
-  7% { transform: translate(42vw, -50vh) rotate(504deg); }
-  8% { transform: translate(48vw, -25vh) rotate(576deg); }
-  9% { transform: translate(54vw, -5vh) rotate(648deg); }
-  10% { transform: translate(60vw, 20vh) rotate(720deg); }
-  10.1%, 100% { transform: translate(0, 100vh) rotate(720deg); }
+  1% { transform: translate(8vw, -60vh) rotate(90deg); }
+  2% { transform: translate(16vw, -100vh) rotate(180deg); }
+  3% { transform: translate(24vw, -120vh) rotate(270deg); }
+  4% { transform: translate(32vw, -120vh) rotate(360deg); }
+  5% { transform: translate(40vw, -100vh) rotate(450deg); }
+  6% { transform: translate(48vw, -60vh) rotate(540deg); }
+  7% { transform: translate(56vw, -15vh) rotate(630deg); }
+  8% { transform: translate(64vw, 30vh) rotate(720deg); }
+  8.1%, 100% { transform: translate(0, 100vh) rotate(720deg); }
 }
 
-/* Arcing from bottom-right to upper-left */
-@keyframes arc-left-1 {
+@keyframes arc-green-high-2 {
   0% { transform: translate(0, 0) rotate(0deg); }
-  1% { transform: translate(-5vw, -40vh) rotate(-60deg); }
-  2% { transform: translate(-10vw, -65vh) rotate(-120deg); }
-  3% { transform: translate(-15vw, -80vh) rotate(-180deg); }
-  4% { transform: translate(-20vw, -85vh) rotate(-240deg); }
-  5% { transform: translate(-25vw, -80vh) rotate(-300deg); }
-  6% { transform: translate(-30vw, -65vh) rotate(-360deg); }
-  7% { transform: translate(-35vw, -45vh) rotate(-420deg); }
-  8% { transform: translate(-40vw, -20vh) rotate(-480deg); }
-  9% { transform: translate(-45vw, -2vh) rotate(-540deg); }
-  10% { transform: translate(-50vw, 20vh) rotate(-600deg); }
-  10.1%, 100% { transform: translate(0, 100vh) rotate(-600deg); }
+  1% { transform: translate(-7vw, -55vh) rotate(-80deg); }
+  2% { transform: translate(-14vw, -95vh) rotate(-160deg); }
+  3% { transform: translate(-21vw, -115vh) rotate(-240deg); }
+  4% { transform: translate(-28vw, -118vh) rotate(-320deg); }
+  5% { transform: translate(-35vw, -98vh) rotate(-400deg); }
+  6% { transform: translate(-42vw, -62vh) rotate(-480deg); }
+  7% { transform: translate(-49vw, -18vh) rotate(-560deg); }
+  8% { transform: translate(-56vw, 28vh) rotate(-640deg); }
+  8.1%, 100% { transform: translate(0, 100vh) rotate(-640deg); }
 }
 
-/* Steeper arc going right */
-@keyframes arc-right-2 {
+/* ----------------------------------------
+   RED BALL ANIMATIONS - Medium Height
+   Peak height: moderate (-75vh)
+   Duration: 30s cycle, 10% visible (~3s arc)
+   ---------------------------------------- */
+@keyframes arc-red-medium-1 {
   0% { transform: translate(0, 0) rotate(0deg); }
-  1% { transform: translate(4vw, -42vh) rotate(48deg); }
-  2% { transform: translate(8vw, -68vh) rotate(96deg); }
-  3% { transform: translate(12vw, -82vh) rotate(144deg); }
-  4% { transform: translate(16vw, -88vh) rotate(192deg); }
-  5% { transform: translate(20vw, -85vh) rotate(240deg); }
-  6% { transform: translate(24vw, -72vh) rotate(288deg); }
-  7% { transform: translate(28vw, -52vh) rotate(336deg); }
-  8% { transform: translate(32vw, -28vh) rotate(384deg); }
-  9% { transform: translate(36vw, -6vh) rotate(432deg); }
-  10% { transform: translate(40vw, 20vh) rotate(480deg); }
-  10.1%, 100% { transform: translate(0, 100vh) rotate(480deg); }
+  1% { transform: translate(5vw, -35vh) rotate(60deg); }
+  2% { transform: translate(10vw, -58vh) rotate(120deg); }
+  3% { transform: translate(15vw, -70vh) rotate(180deg); }
+  4% { transform: translate(20vw, -75vh) rotate(240deg); }
+  5% { transform: translate(25vw, -73vh) rotate(300deg); }
+  6% { transform: translate(30vw, -62vh) rotate(360deg); }
+  7% { transform: translate(35vw, -45vh) rotate(420deg); }
+  8% { transform: translate(40vw, -22vh) rotate(480deg); }
+  9% { transform: translate(45vw, -2vh) rotate(540deg); }
+  10% { transform: translate(50vw, 22vh) rotate(600deg); }
+  10.1%, 100% { transform: translate(0, 100vh) rotate(600deg); }
+}
+
+@keyframes arc-red-medium-2 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  1% { transform: translate(-4vw, -32vh) rotate(-55deg); }
+  2% { transform: translate(-8vw, -54vh) rotate(-110deg); }
+  3% { transform: translate(-12vw, -68vh) rotate(-165deg); }
+  4% { transform: translate(-16vw, -74vh) rotate(-220deg); }
+  5% { transform: translate(-20vw, -72vh) rotate(-275deg); }
+  6% { transform: translate(-24vw, -60vh) rotate(-330deg); }
+  7% { transform: translate(-28vw, -42vh) rotate(-385deg); }
+  8% { transform: translate(-32vw, -20vh) rotate(-440deg); }
+  9% { transform: translate(-36vw, -1vh) rotate(-495deg); }
+  10% { transform: translate(-40vw, 20vh) rotate(-550deg); }
+  10.1%, 100% { transform: translate(0, 100vh) rotate(-550deg); }
+}
+
+/* ----------------------------------------
+   YELLOW BALL ANIMATIONS - Barely Peeks
+   Peak height: just above bottom (-15vh)
+   Duration: 36s cycle, 8% visible (~3s arc)
+   The sad ball that doesn't bounce well
+   ---------------------------------------- */
+@keyframes arc-yellow-low-1 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  1% { transform: translate(3vw, -7vh) rotate(30deg); }
+  2% { transform: translate(6vw, -12vh) rotate(60deg); }
+  3% { transform: translate(9vw, -14vh) rotate(90deg); }
+  4% { transform: translate(12vw, -15vh) rotate(120deg); }
+  5% { transform: translate(15vw, -14vh) rotate(150deg); }
+  6% { transform: translate(18vw, -11vh) rotate(180deg); }
+  7% { transform: translate(21vw, -5vh) rotate(210deg); }
+  8% { transform: translate(24vw, 4vh) rotate(240deg); }
+  8.1%, 100% { transform: translate(0, 100vh) rotate(240deg); }
+}
+
+@keyframes arc-yellow-low-2 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  1% { transform: translate(-2.5vw, -6vh) rotate(-25deg); }
+  2% { transform: translate(-5vw, -11vh) rotate(-50deg); }
+  3% { transform: translate(-7.5vw, -14vh) rotate(-75deg); }
+  4% { transform: translate(-10vw, -15vh) rotate(-100deg); }
+  5% { transform: translate(-12.5vw, -13vh) rotate(-125deg); }
+  6% { transform: translate(-15vw, -10vh) rotate(-150deg); }
+  7% { transform: translate(-17.5vw, -4vh) rotate(-175deg); }
+  8% { transform: translate(-20vw, 5vh) rotate(-200deg); }
+  8.1%, 100% { transform: translate(0, 100vh) rotate(-200deg); }
 }
 
 /* ========================================
