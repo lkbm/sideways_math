@@ -46,5 +46,4 @@ npm run preview      # Preview production build
 ## Development Notes
 
 ## TODOs
-* Make balls match Wayside School playground balls.
 * Music: bouncy, Commander Keen: Goodbye Galaxy-like music.

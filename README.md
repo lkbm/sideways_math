@@ -2,7 +2,7 @@
 
 A simple math puzzle built with preeact, TypeScript, Vite, and Cloudflare Workers.
 
-You can see it deployed on https://sideways-arithmetic.lkbm.workers.dev/
+You can see it deployed at https://sidewaysarithmetic.lucamasters.com/
 
 # Run locally
 * nvm use
