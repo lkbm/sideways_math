@@ -2,25 +2,29 @@
 
 import { useState, useCallback, useMemo, useEffect } from 'preact/hooks';
 import type { GameState, GuessAttempt, Difficulty, FeedbackColor } from '../types';
-import { generatePuzzle } from '../utils/puzzleGenerator';
 import { calculateFeedback, mergeFeedback, getEliminatedDigits, getConfirmedDigits } from '../utils/feedback';
+import { getDailyPuzzle, getTodaysPuzzleNumber, getDateForPuzzle } from '../utils/dailyPuzzle';
 
 const MAX_GUESSES = 6;
 
 export function useGameState() {
+  const todayNumber = getTodaysPuzzleNumber();
+
   const [state, setState] = useState<GameState>({
     puzzle: null,
     currentGuess: {},
     guessHistory: [],
     selectedLetter: null,
     gameStatus: 'loading',
-    maxGuesses: MAX_GUESSES
+    maxGuesses: MAX_GUESSES,
+    puzzleNumber: todayNumber,
+    puzzleDate: getDateForPuzzle(todayNumber)
   });
 
-  // Start a new game on mount
+  // Start with today's puzzle on mount
   useEffect(() => {
-    startNewGame('medium');
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- startNewGame is stable, adding it would cause infinite re-renders
+    loadPuzzle('medium', todayNumber);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only run on mount
   }, []);
 
   // Select a letter for digit assignment
@@ -130,18 +134,35 @@ export function useGameState() {
     });
   }, []);
 
-  // Start a new game
-  const startNewGame = useCallback((difficulty: Difficulty) => {
-    const puzzle = generatePuzzle(difficulty);
+  // Load a puzzle for a specific difficulty and puzzle number
+  const loadPuzzle = useCallback((difficulty: Difficulty, puzzleNumber: number) => {
+    const puzzle = getDailyPuzzle(difficulty, puzzleNumber);
     setState({
       puzzle,
       currentGuess: {},
       guessHistory: [],
       selectedLetter: null,
       gameStatus: 'playing',
-      maxGuesses: MAX_GUESSES
+      maxGuesses: MAX_GUESSES,
+      puzzleNumber,
+      puzzleDate: getDateForPuzzle(puzzleNumber)
     });
   }, []);
+
+  // Start a new game with the current puzzle number (for difficulty change)
+  const startNewGame = useCallback((difficulty: Difficulty) => {
+    loadPuzzle(difficulty, state.puzzleNumber);
+  }, [loadPuzzle, state.puzzleNumber]);
+
+  // Switch to a different puzzle number (from archive)
+  const goToPuzzle = useCallback((puzzleNumber: number, difficulty: Difficulty = 'medium') => {
+    loadPuzzle(difficulty, puzzleNumber);
+  }, [loadPuzzle]);
+
+  // Go to today's puzzle
+  const goToToday = useCallback((difficulty: Difficulty = 'medium') => {
+    loadPuzzle(difficulty, getTodaysPuzzleNumber());
+  }, [loadPuzzle]);
 
   // Derived state
   const derived = useMemo(() => {
@@ -182,7 +203,9 @@ export function useGameState() {
       assignDigit,
       clearLetter,
       submitGuess,
-      startNewGame
+      startNewGame,
+      goToPuzzle,
+      goToToday
     }
   };
 }

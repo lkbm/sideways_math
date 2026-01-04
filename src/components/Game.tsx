@@ -8,15 +8,17 @@ import { MappingPanel } from './MappingPanel';
 import { NumberPad } from './NumberPad';
 import { GameControls } from './GameControls';
 import { GuessHistory } from './GuessHistory';
-import { Header } from './Header';
+import { PuzzleHeader } from './PuzzleHeader';
 import { DifficultySelector } from './DifficultySelector';
 import { GameEndModal } from './GameEndModal';
 import { HelpModal } from './HelpModal';
+import { ArchiveModal } from './ArchiveModal';
 
 export function Game() {
   const { state, derived, actions } = useGameState();
   const [showHelp, setShowHelp] = useState(false);
   const [showDifficulty, setShowDifficulty] = useState(false);
+  const [showArchive, setShowArchive] = useState(false);
 
   // Handle clearing the current guess
   const handleClear = () => {
@@ -36,17 +38,34 @@ export function Game() {
     setShowDifficulty(true);
   };
 
+  // Handle archive selection
+  const handleSelectPuzzle = (puzzleNumber: number) => {
+    actions.goToPuzzle(puzzleNumber);
+  };
+
   // Loading state
   if (state.gameStatus === 'loading' || !state.puzzle) {
     return (
       <div class="game-wrapper">
         <div class="game">
           <div class="game-content">
-            <Header onHelpClick={() => setShowHelp(true)} />
-            <div class="loading">Generating puzzle...</div>
+            <PuzzleHeader
+              puzzleNumber={state.puzzleNumber}
+              puzzleDate={state.puzzleDate}
+              onArchiveClick={() => setShowArchive(true)}
+              onHelpClick={() => setShowHelp(true)}
+            />
+            <div class="loading">Loading puzzle...</div>
           </div>
         </div>
         {showHelp && <HelpModal onClose={() => setShowHelp(false)} />}
+        {showArchive && (
+          <ArchiveModal
+            currentPuzzleNumber={state.puzzleNumber}
+            onSelectPuzzle={handleSelectPuzzle}
+            onClose={() => setShowArchive(false)}
+          />
+        )}
       </div>
     );
   }
@@ -57,11 +76,23 @@ export function Game() {
       <div class="game-wrapper">
         <div class="game">
           <div class="game-content">
-            <Header onHelpClick={() => setShowHelp(true)} />
+            <PuzzleHeader
+              puzzleNumber={state.puzzleNumber}
+              puzzleDate={state.puzzleDate}
+              onArchiveClick={() => setShowArchive(true)}
+              onHelpClick={() => setShowHelp(true)}
+            />
             <DifficultySelector onSelect={handleNewGame} />
           </div>
         </div>
         {showHelp && <HelpModal onClose={() => setShowHelp(false)} />}
+        {showArchive && (
+          <ArchiveModal
+            currentPuzzleNumber={state.puzzleNumber}
+            onSelectPuzzle={handleSelectPuzzle}
+            onClose={() => setShowArchive(false)}
+          />
+        )}
       </div>
     );
   }
@@ -98,7 +129,12 @@ export function Game() {
     <div class="game-wrapper">
       <div class="game">
         <div class="game-content">
-          <Header onHelpClick={() => setShowHelp(true)} />
+          <PuzzleHeader
+            puzzleNumber={state.puzzleNumber}
+            puzzleDate={state.puzzleDate}
+            onArchiveClick={() => setShowArchive(true)}
+            onHelpClick={() => setShowHelp(true)}
+          />
 
           <EquationDisplay
             puzzle={state.puzzle}
@@ -151,6 +187,14 @@ export function Game() {
       )}
 
       {showHelp && <HelpModal onClose={() => setShowHelp(false)} />}
+
+      {showArchive && (
+        <ArchiveModal
+          currentPuzzleNumber={state.puzzleNumber}
+          onSelectPuzzle={handleSelectPuzzle}
+          onClose={() => setShowArchive(false)}
+        />
+      )}
     </div>
   );
 }

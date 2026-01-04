@@ -27,6 +27,9 @@ export interface GameState {
 	selectedLetter: string | null;
 	gameStatus: "loading" | "playing" | "won" | "lost";
 	maxGuesses: number;
+	// Daily puzzle state
+	puzzleNumber: number;
+	puzzleDate: Date;
 }
 
 // For the solver
