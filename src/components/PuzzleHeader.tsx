@@ -1,6 +1,6 @@
 // Puzzle header showing puzzle number, date, and archive access
 
-import { formatDate, isTodaysPuzzle } from "../utils/dailyPuzzle";
+import { formatDate } from "../utils/dailyPuzzle";
 
 interface PuzzleHeaderProps {
 	puzzleNumber: number;

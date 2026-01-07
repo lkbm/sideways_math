@@ -1,21 +1,11 @@
 // Daily puzzle utilities - deterministic puzzle selection based on date
 
 import type { Difficulty, Puzzle } from "../types";
-import { PUZZLES } from "./precomputedPuzzles";
+import { generatePuzzleForSeed } from "../shared/puzzleGenerator";
 
 // Launch date - Puzzle #1 starts here
 // Using a date in the past so we have an archive from day 1
 export const LAUNCH_DATE = new Date("2024-01-01"); // LKBM TODO
-
-// Simple seeded random number generator (mulberry32)
-function seededRandom(seed: number): () => number {
-	return function () {
-		let t = (seed += 0x6d2b79f5);
-		t = Math.imul(t ^ (t >>> 15), t | 1);
-		t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-		return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-	};
-}
 
 // Get puzzle number for a given date (1-indexed)
 export function getPuzzleNumber(date: Date = new Date()): number {
@@ -63,23 +53,8 @@ export function getTodaysPuzzleNumber(): number {
 
 // Get the daily puzzle for a specific difficulty and puzzle number
 export function getDailyPuzzle(difficulty: Difficulty, puzzleNumber: number): Puzzle {
-	const puzzles = PUZZLES[difficulty];
-
-	// Create a seed from puzzle number and difficulty
-	// This ensures same puzzle for everyone on the same day
-	const difficultyOffset = difficulty === "easy" ? 0 : difficulty === "medium" ? 1000 : 2000;
-	const seed = puzzleNumber + difficultyOffset;
-
-	const random = seededRandom(seed);
-
-	// Pick a puzzle deterministically based on the seed
-	const index = Math.floor(random() * puzzles.length);
-	const puzzle = puzzles[index];
-
-	return {
-		...puzzle,
-		id: `daily-${difficulty}-${puzzleNumber}`,
-	};
+	// Use the dynamic puzzle generator - deterministically generates puzzles from seed
+	return generatePuzzleForSeed(puzzleNumber, difficulty);
 }
 
 // Check if a puzzle number is in the future

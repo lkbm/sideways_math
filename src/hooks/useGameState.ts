@@ -1,9 +1,33 @@
 // Central game state management hook
 
 import { useState, useCallback, useMemo, useEffect } from 'preact/hooks';
-import type { GameState, GuessAttempt, Difficulty, FeedbackColor } from '../types';
+import type { GameState, GuessAttempt, Difficulty, FeedbackColor, Puzzle } from '../types';
 import { calculateFeedback, mergeFeedback, getEliminatedDigits, getConfirmedDigits } from '../utils/feedback';
 import { getDailyPuzzle, getTodaysPuzzleNumber, getDateForPuzzle } from '../utils/dailyPuzzle';
+
+// Fetch puzzle from API with client-side fallback
+async function fetchPuzzle(difficulty: Difficulty, puzzleNumber: number): Promise<Puzzle> {
+  try {
+    // Add timeout to avoid hanging on slow puzzle generation
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+    const response = await fetch(`/api/puzzle/${difficulty}/${puzzleNumber}`, {
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      throw new Error(`API returned ${response.status}`);
+    }
+    return await response.json() as Puzzle;
+  } catch {
+    // Fallback to client-side generation if API fails or times out
+    // This uses the same deterministic algorithm, so results are identical
+    console.warn('API fetch failed, using client-side generation');
+    return getDailyPuzzle(difficulty, puzzleNumber);
+  }
+}
 
 const MAX_GUESSES = 6;
 
@@ -135,8 +159,13 @@ export function useGameState() {
   }, []);
 
   // Load a puzzle for a specific difficulty and puzzle number
-  const loadPuzzle = useCallback((difficulty: Difficulty, puzzleNumber: number) => {
-    const puzzle = getDailyPuzzle(difficulty, puzzleNumber);
+  const loadPuzzle = useCallback(async (difficulty: Difficulty, puzzleNumber: number) => {
+    // Set loading state
+    setState(s => ({ ...s, gameStatus: 'loading' }));
+
+    // Fetch from API (with client-side fallback)
+    const puzzle = await fetchPuzzle(difficulty, puzzleNumber);
+
     setState({
       puzzle,
       currentGuess: {},
