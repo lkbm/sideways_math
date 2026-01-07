@@ -169,6 +169,7 @@ Maybe a "first solver of the day" leaderboard later on, but not a priority.
 * Keyboard: Tab/Shift+Tab, Enter to submit, Backspace to clear
 * Win celebration: subtle, scales by difficulty (no confetti)
 * One-time difficulty unlock (beat Easy once → Medium unlocks permanently)
+* Figure out additional accessibility improvements
 
 ## V2 TODOs (Later)
 * Weekend bonus puzzle types (subtraction, multiplication, multi-equation, 3+ addends, constrained)
@@ -177,4 +178,3 @@ Maybe a "first solver of the day" leaderboard later on, but not a priority.
 * Arrow key navigation between letters
 * Super-streaks and achievements
 * "First solver of the day" leaderboard
-* Additional accessibility improvements
