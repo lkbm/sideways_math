@@ -164,7 +164,7 @@ Maybe a "first solver of the day" leaderboard later on, but not a priority.
 * Sharing (green/yellow dots per difficulty + streak)
 * Mobile polish (test and fix touch targets, layout, etc.)
 * Win celebration: subtle, scales by difficulty (no confetti)
-* One-time difficulty unlock (beat Easy once → Medium unlocks permanently)
+* TEST: One-time difficulty unlock (beat Easy once → Medium unlocks permanently)
 * Figure out additional accessibility improvements
 * Why six guesses?
 
@@ -172,6 +172,6 @@ Maybe a "first solver of the day" leaderboard later on, but not a priority.
 * Weekend bonus puzzle types (subtraction, multiplication, multi-equation, 3+ addends, constrained)
 * Sound effects: occasional subtle sounds (laughter? ball bounces?)
 * Colorblind mode (symbols + colors)
-* Arrow key navigation between letters
 * Super-streaks and achievements
 * "First solver of the day" leaderboard
+* Add auth for cross-device stats syncing.

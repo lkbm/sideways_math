@@ -1,8 +1,9 @@
 // Main game container that orchestrates all components
 
-import { useState, useEffect, useMemo } from 'preact/hooks';
+import { useState, useEffect, useMemo, useRef } from 'preact/hooks';
 import type { Difficulty } from '../types';
 import { useGameState } from '../hooks/useGameState';
+import { useUnlockState } from '../hooks/useUnlockState';
 import { EquationDisplay } from './EquationDisplay';
 import { MappingPanel } from './MappingPanel';
 import { NumberPad } from './NumberPad';
@@ -16,9 +17,21 @@ import { ArchiveModal } from './ArchiveModal';
 
 export function Game() {
   const { state, derived, actions } = useGameState();
+  const { unlockedDifficulties, recordWin } = useUnlockState();
   const [showHelp, setShowHelp] = useState(false);
   const [showDifficulty, setShowDifficulty] = useState(false);
   const [showArchive, setShowArchive] = useState(false);
+
+  // Track previous game status to detect wins
+  const prevGameStatus = useRef(state.gameStatus);
+
+  // Record win when game status changes to 'won'
+  useEffect(() => {
+    if (prevGameStatus.current !== 'won' && state.gameStatus === 'won' && state.puzzle) {
+      recordWin(state.puzzle.difficulty, state.puzzleDate);
+    }
+    prevGameStatus.current = state.gameStatus;
+  }, [state.gameStatus, state.puzzle, state.puzzleDate, recordWin]);
 
   // Handle clearing the current guess
   const handleClear = () => {
@@ -82,7 +95,10 @@ export function Game() {
               onArchiveClick={() => setShowArchive(true)}
               onHelpClick={() => setShowHelp(true)}
             />
-            <DifficultySelector onSelect={handleNewGame} />
+            <DifficultySelector
+              onSelect={handleNewGame}
+              unlockedDifficulties={unlockedDifficulties}
+            />
           </div>
         </div>
         {showHelp && <HelpModal onClose={() => setShowHelp(false)} />}

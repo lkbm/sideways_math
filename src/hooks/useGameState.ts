@@ -47,8 +47,9 @@ export function useGameState() {
   });
 
   // Start with today's puzzle on mount
+  // Default to 'easy' - unlock system will guide progression
   useEffect(() => {
-    loadPuzzle('medium', todayNumber);
+    loadPuzzle('easy', todayNumber);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only run on mount
   }, []);
 

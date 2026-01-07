@@ -943,6 +943,31 @@ body {
   background: rgba(230, 57, 70, 0.08);
 }
 
+/* Locked difficulty buttons */
+.difficulty-btn.locked {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: rgba(200, 195, 180, 0.5);
+}
+
+.difficulty-btn.locked:hover {
+  transform: none;
+  box-shadow:
+    0 4px 0 #c5bfa8,
+    0 5px 8px rgba(0, 0, 0, 0.1);
+  border-color: var(--color-light-gray);
+  background: rgba(200, 195, 180, 0.5);
+}
+
+.difficulty-btn.locked .lock-icon {
+  font-size: 0.9em;
+}
+
+.difficulty-btn.locked .difficulty-desc {
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
 /* ========================================
    MODALS
    ======================================== */
