@@ -39,6 +39,7 @@ export function useGameState() {
     currentGuess: {},
     guessHistory: [],
     selectedLetter: null,
+    primaryTileId: null,
     gameStatus: 'loading',
     maxGuesses: MAX_GUESSES,
     puzzleNumber: todayNumber,
@@ -52,12 +53,19 @@ export function useGameState() {
   }, []);
 
   // Select a letter for digit assignment
-  const selectLetter = useCallback((letter: string) => {
+  // tileId is optional - if provided, that tile becomes the primary selection
+  const selectLetter = useCallback((letter: string, tileId?: string) => {
     setState(s => {
       if (s.gameStatus !== 'playing') return s;
-      // Toggle selection if clicking same letter
-      const newSelected = s.selectedLetter === letter ? null : letter;
-      return { ...s, selectedLetter: newSelected };
+      // Toggle selection if clicking same letter (same tile or no tile specified)
+      const isSameLetter = s.selectedLetter === letter;
+      const isSameTile = tileId && s.primaryTileId === tileId;
+      const newSelected = (isSameLetter && (!tileId || isSameTile)) ? null : letter;
+      return {
+        ...s,
+        selectedLetter: newSelected,
+        primaryTileId: newSelected ? (tileId ?? null) : null
+      };
     });
   }, []);
 
@@ -153,7 +161,8 @@ export function useGameState() {
         guessHistory: newHistory,
         gameStatus: newStatus,
         currentGuess: newGuess,
-        selectedLetter: null
+        selectedLetter: null,
+        primaryTileId: null
       };
     });
   }, []);
@@ -171,6 +180,7 @@ export function useGameState() {
       currentGuess: {},
       guessHistory: [],
       selectedLetter: null,
+      primaryTileId: null,
       gameStatus: 'playing',
       maxGuesses: MAX_GUESSES,
       puzzleNumber,

@@ -6,6 +6,7 @@ interface LetterTileProps {
   letter: string;
   digit: number | null;
   isSelected: boolean;
+  isPrimary?: boolean;
   feedback: FeedbackColor;
   onClick: () => void;
   disabled?: boolean;
@@ -15,6 +16,7 @@ export function LetterTile({
   letter,
   digit,
   isSelected,
+  isPrimary = false,
   feedback,
   onClick,
   disabled = false
@@ -22,23 +24,15 @@ export function LetterTile({
   const classes = [
     'letter-tile',
     `feedback-${feedback}`,
-    isSelected && 'selected',
+    isSelected && !isPrimary && 'selected',
+    isSelected && isPrimary && 'selected-primary',
     disabled && 'disabled'
   ].filter(Boolean).join(' ');
-
-  const handleFocus = (e: FocusEvent) => {
-    // Only trigger onClick on keyboard focus (Tab), not mouse focus
-    // Mouse clicks will trigger onClick directly via the click handler
-    if (e.relatedTarget !== null) {
-      onClick();
-    }
-  };
 
   return (
     <button
       class={classes}
       onClick={onClick}
-      onFocus={handleFocus}
       disabled={disabled}
       type="button"
     >

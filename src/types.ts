@@ -25,6 +25,7 @@ export interface GameState {
 	currentGuess: Record<string, number | null>; // Partial mapping in progress
 	guessHistory: GuessAttempt[];
 	selectedLetter: string | null;
+	primaryTileId: string | null; // Which specific tile instance is focused
 	gameStatus: "loading" | "playing" | "won" | "lost";
 	maxGuesses: number;
 	// Daily puzzle state

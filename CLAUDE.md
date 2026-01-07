@@ -163,13 +163,10 @@ Maybe a "first solver of the day" leaderboard later on, but not a priority.
 * Stats tracking (streak, solve counts by difficulty, one-guess rate)
 * Sharing (green/yellow dots per difficulty + streak)
 * Mobile polish (test and fix touch targets, layout, etc.)
-* Input bugs:
-  - Clicking letter B when A is selected just deselects A (should select B)
-  - Hover state on selected letter looks like unselected hover
-* Keyboard: Tab/Shift+Tab, Enter to submit, Backspace to clear
 * Win celebration: subtle, scales by difficulty (no confetti)
 * One-time difficulty unlock (beat Easy once → Medium unlocks permanently)
 * Figure out additional accessibility improvements
+* Why six guesses?
 
 ## V2 TODOs (Later)
 * Weekend bonus puzzle types (subtraction, multiplication, multi-equation, 3+ addends, constrained)

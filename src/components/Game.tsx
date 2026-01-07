@@ -1,6 +1,6 @@
 // Main game container that orchestrates all components
 
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect, useMemo } from 'preact/hooks';
 import type { Difficulty } from '../types';
 import { useGameState } from '../hooks/useGameState';
 import { EquationDisplay } from './EquationDisplay';
@@ -99,11 +99,118 @@ export function Game() {
 
   const isGameOver = state.gameStatus === 'won' || state.gameStatus === 'lost';
 
-  // Handle keyboard input for digit assignment
+  // Build a grid of tiles for spatial navigation
+  // Each tile has { letter, tileId, row, col } where col is right-aligned
+  const tileGrid = useMemo(() => {
+    if (!state.puzzle) return { tiles: [], maxLength: 0, rowCount: 0 };
+
+    const allWords = [...state.puzzle.operands, state.puzzle.result];
+    const maxLength = Math.max(...allWords.map(w => w.length));
+    const tiles: Array<{ letter: string; tileId: string; row: number; col: number }> = [];
+
+    allWords.forEach((word, wordIndex) => {
+      const padding = maxLength - word.length;
+      word.split('').forEach((letter, charIndex) => {
+        tiles.push({
+          letter,
+          tileId: `${wordIndex}-${charIndex}`,
+          row: wordIndex,
+          col: padding + charIndex // Right-aligned
+        });
+      });
+    });
+
+    return { tiles, maxLength, rowCount: allWords.length };
+  }, [state.puzzle]);
+
+  // Handle keyboard input for navigation and digit assignment
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Only handle when a letter is selected and game is active
-      if (!state.selectedLetter || isGameOver) return;
+      if (isGameOver) return;
+
+      const letters = state.puzzle?.letters ?? [];
+
+      // Enter to submit guess
+      if (e.key === 'Enter' && derived.canSubmit) {
+        e.preventDefault();
+        actions.submitGuess();
+        return;
+      }
+
+      // Tab / Shift+Tab to navigate between unique letters
+      if (e.key === 'Tab' && letters.length > 0) {
+        e.preventDefault();
+        const currentIndex = state.selectedLetter
+          ? letters.indexOf(state.selectedLetter)
+          : -1;
+
+        let nextIndex: number;
+        if (e.shiftKey) {
+          nextIndex = currentIndex <= 0 ? letters.length - 1 : currentIndex - 1;
+        } else {
+          nextIndex = currentIndex >= letters.length - 1 ? 0 : currentIndex + 1;
+        }
+        actions.selectLetter(letters[nextIndex]);
+        return;
+      }
+
+      // Arrow keys for spatial navigation within the equation grid
+      if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown') && tileGrid.tiles.length > 0) {
+        e.preventDefault();
+
+        // Find current tile position
+        let currentTile = tileGrid.tiles.find(t => t.tileId === state.primaryTileId);
+
+        // If no primary tile but we have a selected letter, find first tile with that letter
+        if (!currentTile && state.selectedLetter) {
+          currentTile = tileGrid.tiles.find(t => t.letter === state.selectedLetter);
+        }
+
+        // If still nothing, start at first tile
+        if (!currentTile) {
+          const firstTile = tileGrid.tiles[0];
+          actions.selectLetter(firstTile.letter, firstTile.tileId);
+          return;
+        }
+
+        let targetRow = currentTile.row;
+        let targetCol = currentTile.col;
+
+        if (e.key === 'ArrowLeft') {
+          targetCol--;
+        } else if (e.key === 'ArrowRight') {
+          targetCol++;
+        } else if (e.key === 'ArrowUp') {
+          targetRow--;
+        } else if (e.key === 'ArrowDown') {
+          targetRow++;
+        }
+
+        // Wrap rows
+        if (targetRow < 0) targetRow = tileGrid.rowCount - 1;
+        if (targetRow >= tileGrid.rowCount) targetRow = 0;
+
+        // Find tile at target position, or nearest tile in that row
+        let targetTile = tileGrid.tiles.find(t => t.row === targetRow && t.col === targetCol);
+
+        if (!targetTile) {
+          // Find tiles in target row and pick the closest column
+          const rowTiles = tileGrid.tiles.filter(t => t.row === targetRow);
+          if (rowTiles.length > 0) {
+            targetTile = rowTiles.reduce((closest, t) =>
+              Math.abs(t.col - targetCol) < Math.abs(closest.col - targetCol) ? t : closest
+            );
+          }
+        }
+
+        if (targetTile) {
+          actions.selectLetter(targetTile.letter, targetTile.tileId);
+        }
+        return;
+      }
+
+      // The following require a selected letter
+      if (!state.selectedLetter) return;
 
       // Check if it's a digit key (0-9)
       if (e.key >= '0' && e.key <= '9') {
@@ -123,7 +230,7 @@ export function Game() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [state.selectedLetter, isGameOver, actions]);
+  }, [state.selectedLetter, state.primaryTileId, state.puzzle?.letters, tileGrid, isGameOver, derived.canSubmit, actions]);
 
   return (
     <div class="game-wrapper">
@@ -140,6 +247,7 @@ export function Game() {
             puzzle={state.puzzle}
             currentGuess={state.currentGuess}
             selectedLetter={state.selectedLetter}
+            primaryTileId={state.primaryTileId}
             feedback={derived.cumulativeFeedback}
             onLetterClick={actions.selectLetter}
             disabled={isGameOver}

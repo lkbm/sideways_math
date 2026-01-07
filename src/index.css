@@ -495,7 +495,7 @@ body {
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
-.letter-tile:hover:not(.disabled) {
+.letter-tile:hover:not(.disabled):not(.selected):not(.selected-primary) {
   border-color: var(--pencil-gray);
   transform: translateY(-2px);
   box-shadow:
@@ -503,12 +503,37 @@ body {
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
+/* Secondary selection - other tiles with the same letter */
 .letter-tile.selected {
-  border-color: var(--color-selected);
+  border-color: rgba(126, 184, 224, 0.6);
+  background: rgba(126, 184, 224, 0.08);
   box-shadow:
-    0 0 0 3px rgba(126, 184, 224, 0.4),
+    0 0 0 2px rgba(126, 184, 224, 0.25),
+    1px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.letter-tile.selected:hover:not(.disabled) {
+  background: rgba(126, 184, 224, 0.15);
+  box-shadow:
+    0 0 0 2px rgba(126, 184, 224, 0.35),
+    1px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Primary selection - the tile you actually clicked */
+.letter-tile.selected-primary {
+  border-color: var(--color-selected);
+  background: rgba(126, 184, 224, 0.2);
+  box-shadow:
+    0 0 0 3px rgba(126, 184, 224, 0.5),
     2px 4px 8px rgba(0, 0, 0, 0.15);
   transform: translateY(-2px);
+}
+
+.letter-tile.selected-primary:hover:not(.disabled) {
+  background: rgba(126, 184, 224, 0.3);
+  box-shadow:
+    0 0 0 4px rgba(126, 184, 224, 0.6),
+    2px 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .letter-tile.disabled {
@@ -596,14 +621,21 @@ body {
   box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.08);
 }
 
-.mapping-row:hover:not(.disabled) {
+.mapping-row:hover:not(.disabled):not(.selected) {
   border-color: var(--pencil-gray);
   transform: translateY(-1px);
 }
 
 .mapping-row.selected {
   border-color: var(--color-selected);
+  background: rgba(126, 184, 224, 0.15);
   box-shadow: 0 0 0 2px rgba(126, 184, 224, 0.4);
+  transform: translateY(-1px);
+}
+
+.mapping-row.selected:hover:not(.disabled) {
+  background: rgba(126, 184, 224, 0.25);
+  box-shadow: 0 0 0 3px rgba(126, 184, 224, 0.5);
 }
 
 .mapping-row.disabled {

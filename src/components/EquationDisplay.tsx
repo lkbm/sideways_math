@@ -7,8 +7,9 @@ interface EquationDisplayProps {
   puzzle: Puzzle;
   currentGuess: Record<string, number | null>;
   selectedLetter: string | null;
+  primaryTileId: string | null;
   feedback: Record<string, FeedbackColor>;
-  onLetterClick: (letter: string) => void;
+  onLetterClick: (letter: string, tileId: string) => void;
   disabled?: boolean;
 }
 
@@ -16,6 +17,7 @@ export function EquationDisplay({
   puzzle,
   currentGuess,
   selectedLetter,
+  primaryTileId,
   feedback,
   onLetterClick,
   disabled = false
@@ -39,17 +41,21 @@ export function EquationDisplay({
           {paddedLetters.map((_, i) => (
             <div key={`pad-${i}`} class="letter-tile-spacer" />
           ))}
-          {word.split('').map((letter, charIndex) => (
-            <LetterTile
-              key={`${wordIndex}-${charIndex}`}
-              letter={letter}
-              digit={currentGuess[letter] ?? null}
-              isSelected={selectedLetter === letter}
-              feedback={feedback[letter] || 'none'}
-              onClick={() => onLetterClick(letter)}
-              disabled={disabled}
-            />
-          ))}
+          {word.split('').map((letter, charIndex) => {
+            const tileId = `${wordIndex}-${charIndex}`;
+            return (
+              <LetterTile
+                key={tileId}
+                letter={letter}
+                digit={currentGuess[letter] ?? null}
+                isSelected={selectedLetter === letter}
+                isPrimary={primaryTileId === tileId}
+                feedback={feedback[letter] || 'none'}
+                onClick={() => onLetterClick(letter, tileId)}
+                disabled={disabled}
+              />
+            );
+          })}
         </div>
       </div>
     );
