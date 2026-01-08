@@ -305,8 +305,10 @@ export function Game() {
           isWin={state.gameStatus === 'won'}
           puzzle={state.puzzle}
           guessCount={state.guessHistory.length}
+          unlockedDifficulties={unlockedDifficulties}
           onNewGame={handleNewGame}
-          onClose={handleShowDifficulty}
+          onShowDifficulty={handleShowDifficulty}
+          onShowArchive={() => setShowArchive(true)}
         />
       )}
 

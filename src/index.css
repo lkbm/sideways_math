@@ -505,13 +505,44 @@ body {
 
 /* Secondary selection - other tiles with the same letter (subtle) */
 .letter-tile.selected {
-  border: 2px dashed rgba(126, 184, 224, 0.5);
-  background: rgba(126, 184, 224, 0.05);
+  border: 2px dashed rgba(126, 184, 224, 0.8);
+  background: rgba(126, 184, 224, 0.15);
 }
 
 .letter-tile.selected:hover:not(.disabled) {
-  border-color: rgba(126, 184, 224, 0.7);
-  background: rgba(126, 184, 224, 0.1);
+  border-color: rgba(126, 184, 224, 0.9);
+  background: rgba(126, 184, 224, 0.2);
+}
+
+/* Secondary selection with feedback - maintain color but with darker text for contrast */
+.letter-tile.selected.feedback-green {
+  background: rgba(90, 154, 84, 0.3);
+  border-color: rgba(90, 154, 84, 0.8);
+}
+
+.letter-tile.selected.feedback-green .letter,
+.letter-tile.selected.feedback-green .digit {
+  color: #2d5a28;
+}
+
+.letter-tile.selected.feedback-yellow {
+  background: rgba(201, 162, 39, 0.3);
+  border-color: rgba(201, 162, 39, 0.8);
+}
+
+.letter-tile.selected.feedback-yellow .letter,
+.letter-tile.selected.feedback-yellow .digit {
+  color: #735810;
+}
+
+.letter-tile.selected.feedback-gray {
+  background: rgba(107, 107, 107, 0.3);
+  border-color: rgba(107, 107, 107, 0.8);
+}
+
+.letter-tile.selected.feedback-gray .letter,
+.letter-tile.selected.feedback-gray .digit {
+  color: #2c2c2c;
 }
 
 /* Primary selection - the tile you actually clicked (prominent) */
@@ -529,6 +560,46 @@ body {
   box-shadow:
     0 0 0 4px rgba(91, 163, 208, 0.5),
     0 4px 12px rgba(91, 163, 208, 0.35);
+}
+
+/* Primary selection with feedback - maintain color with strong contrast */
+.letter-tile.selected-primary.feedback-green {
+  background: rgba(90, 154, 84, 0.4);
+  border-color: #5a9a54;
+  box-shadow:
+    0 0 0 3px rgba(90, 154, 84, 0.5),
+    0 4px 12px rgba(90, 154, 84, 0.4);
+}
+
+.letter-tile.selected-primary.feedback-green .letter,
+.letter-tile.selected-primary.feedback-green .digit {
+  color: #1e3d1a;
+}
+
+.letter-tile.selected-primary.feedback-yellow {
+  background: rgba(201, 162, 39, 0.4);
+  border-color: #c9a227;
+  box-shadow:
+    0 0 0 3px rgba(201, 162, 39, 0.5),
+    0 4px 12px rgba(201, 162, 39, 0.4);
+}
+
+.letter-tile.selected-primary.feedback-yellow .letter,
+.letter-tile.selected-primary.feedback-yellow .digit {
+  color: #4d3a08;
+}
+
+.letter-tile.selected-primary.feedback-gray {
+  background: rgba(107, 107, 107, 0.4);
+  border-color: #6b6b6b;
+  box-shadow:
+    0 0 0 3px rgba(107, 107, 107, 0.5),
+    0 4px 12px rgba(107, 107, 107, 0.4);
+}
+
+.letter-tile.selected-primary.feedback-gray .letter,
+.letter-tile.selected-primary.feedback-gray .digit {
+  color: #1a1a1a;
 }
 
 .letter-tile.disabled {
@@ -1276,4 +1347,247 @@ body {
   .header h1 {
     font-size: 1.6rem;
   }
+}
+
+/* ========================================
+   WIN CELEBRATION - Scales by difficulty
+   Subtle, school-themed animations
+   ======================================== */
+
+/* Modal glow effect - intensity increases with difficulty */
+.win-glow {
+  position: absolute;
+  inset: -20px;
+  border-radius: 12px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.win-glow-easy {
+  animation: glow-pulse-easy 2s ease-in-out;
+  background: radial-gradient(circle, rgba(90, 154, 84, 0.15) 0%, transparent 70%);
+}
+
+.win-glow-medium {
+  animation: glow-pulse-medium 2.5s ease-in-out;
+  background: radial-gradient(circle, rgba(201, 162, 39, 0.2) 0%, transparent 70%);
+}
+
+.win-glow-hard {
+  animation: glow-pulse-hard 3s ease-in-out;
+  background: radial-gradient(circle, rgba(230, 57, 70, 0.25) 0%, transparent 70%);
+}
+
+@keyframes glow-pulse-easy {
+  0%, 100% { opacity: 0; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+@keyframes glow-pulse-medium {
+  0%, 100% { opacity: 0; transform: scale(0.85); }
+  40% { opacity: 1; transform: scale(1.1); }
+  60% { opacity: 1; transform: scale(1.08); }
+}
+
+@keyframes glow-pulse-hard {
+  0%, 100% { opacity: 0; transform: scale(0.8); }
+  30% { opacity: 1; transform: scale(1.15); }
+  50% { opacity: 0.9; transform: scale(1.12); }
+  70% { opacity: 1; transform: scale(1.1); }
+}
+
+/* Modal entrance animation - scales by difficulty */
+.modal-win-easy {
+  animation: modal-bounce-easy 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.modal-win-medium {
+  animation: modal-bounce-medium 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.modal-win-hard {
+  animation: modal-bounce-hard 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes modal-bounce-easy {
+  0% { transform: scale(0.8); opacity: 0; }
+  60% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes modal-bounce-medium {
+  0% { transform: scale(0.7) rotate(-5deg); opacity: 0; }
+  50% { transform: scale(1.1) rotate(2deg); }
+  70% { transform: scale(0.95) rotate(-1deg); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes modal-bounce-hard {
+  0% { transform: scale(0.6) rotate(-10deg); opacity: 0; }
+  40% { transform: scale(1.15) rotate(5deg); }
+  60% { transform: scale(0.9) rotate(-3deg); }
+  80% { transform: scale(1.05) rotate(1deg); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* Screen flash - entire modal pulses brighter */
+.win-shimmer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0);
+}
+
+.win-shimmer-easy {
+  animation: screen-pulse-easy 0.8s ease-out 0.2s;
+}
+
+.win-shimmer-medium {
+  animation: screen-pulse-medium 0.9s ease-out 0.2s;
+}
+
+.win-shimmer-hard {
+  animation: screen-pulse-hard 1s ease-out 0.2s;
+}
+
+@keyframes screen-pulse-easy {
+  0%, 100% { background: rgba(255, 255, 255, 0); }
+  50% { background: rgba(255, 255, 255, 0.15); }
+}
+
+@keyframes screen-pulse-medium {
+  0%, 100% { background: rgba(255, 255, 255, 0); }
+  50% { background: rgba(255, 255, 255, 0.25); }
+}
+
+@keyframes screen-pulse-hard {
+  0%, 100% { background: rgba(255, 255, 255, 0); }
+  50% { background: rgba(255, 255, 255, 0.35); }
+}
+
+/* Perfect solve: subtle corner sparkles */
+.perfect-sparkles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.sparkle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, #ffd700 0%, #ffed4e 50%, transparent 100%);
+  border-radius: 50%;
+  opacity: 0;
+  box-shadow: 0 0 8px 2px rgba(255, 215, 0, 0.6);
+}
+
+.sparkle-1 {
+  top: 10%;
+  left: 10%;
+  animation: sparkle-twinkle 1.5s ease-in-out 0.3s;
+}
+
+.sparkle-2 {
+  top: 10%;
+  right: 10%;
+  animation: sparkle-twinkle 1.5s ease-in-out 0.5s;
+}
+
+.sparkle-3 {
+  bottom: 20%;
+  left: 15%;
+  animation: sparkle-twinkle 1.5s ease-in-out 0.7s;
+}
+
+.sparkle-4 {
+  bottom: 20%;
+  right: 15%;
+  animation: sparkle-twinkle 1.5s ease-in-out 0.9s;
+}
+
+@keyframes sparkle-twinkle {
+  0%, 100% { opacity: 0; transform: scale(0); }
+  50% { opacity: 1; transform: scale(1.5); }
+}
+
+/* Celebration balls (hard difficulty only) - bounce from bottom */
+.celebration-balls {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.celebration-ball {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  bottom: -40px;
+}
+
+.celebration-ball-1 {
+  left: 20%;
+  background: radial-gradient(circle at 30% 30%, #5fd9a4, var(--ball-green) 50%, #1a6b4a);
+  animation: celebration-bounce-1 2s ease-out;
+  box-shadow:
+    inset -4px -4px 10px rgba(0, 0, 0, 0.3),
+    inset 4px 4px 10px rgba(255, 255, 255, 0.3);
+}
+
+.celebration-ball-2 {
+  left: 50%;
+  background: radial-gradient(circle at 30% 30%, #ff6b6b, var(--ball-red) 50%, #b82d3a);
+  animation: celebration-bounce-2 2.2s ease-out;
+  animation-delay: 0.1s;
+  box-shadow:
+    inset -4px -4px 10px rgba(0, 0, 0, 0.3),
+    inset 4px 4px 10px rgba(255, 255, 255, 0.3);
+}
+
+.celebration-ball-3 {
+  right: 20%;
+  background: radial-gradient(circle at 30% 30%, #ffcc80, var(--ball-yellow) 50%, #c47b30);
+  animation: celebration-bounce-3 2.1s ease-out;
+  animation-delay: 0.2s;
+  box-shadow:
+    inset -4px -4px 10px rgba(0, 0, 0, 0.3),
+    inset 4px 4px 10px rgba(255, 255, 255, 0.3);
+}
+
+@keyframes celebration-bounce-1 {
+  0% { transform: translateY(0) rotate(0deg); }
+  15% { transform: translateY(-180px) rotate(90deg); }
+  30% { transform: translateY(-50px) rotate(180deg); }
+  45% { transform: translateY(-120px) rotate(270deg); }
+  60% { transform: translateY(-30px) rotate(360deg); }
+  75% { transform: translateY(-60px) rotate(450deg); }
+  90% { transform: translateY(-20px) rotate(520deg); }
+  100% { transform: translateY(-30px) rotate(540deg); }
+}
+
+@keyframes celebration-bounce-2 {
+  0% { transform: translateY(0) rotate(0deg); }
+  12% { transform: translateY(-200px) rotate(-80deg); }
+  28% { transform: translateY(-60px) rotate(-160deg); }
+  42% { transform: translateY(-140px) rotate(-240deg); }
+  58% { transform: translateY(-40px) rotate(-320deg); }
+  72% { transform: translateY(-80px) rotate(-400deg); }
+  88% { transform: translateY(-25px) rotate(-470deg); }
+  100% { transform: translateY(-35px) rotate(-520deg); }
+}
+
+@keyframes celebration-bounce-3 {
+  0% { transform: translateY(0) rotate(0deg); }
+  14% { transform: translateY(-160px) rotate(70deg); }
+  32% { transform: translateY(-45px) rotate(140deg); }
+  48% { transform: translateY(-110px) rotate(210deg); }
+  62% { transform: translateY(-35px) rotate(280deg); }
+  76% { transform: translateY(-65px) rotate(350deg); }
+  92% { transform: translateY(-22px) rotate(410deg); }
+  100% { transform: translateY(-28px) rotate(450deg); }
 }
