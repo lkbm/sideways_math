@@ -1,6 +1,6 @@
 // Reusable modal wrapper component
 
-import type { ComponentChildren, JSX } from 'preact';
+import type { ComponentChildren } from 'preact';
 import { cn } from '../utils/classNames';
 
 interface ModalProps {
