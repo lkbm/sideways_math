@@ -1,6 +1,7 @@
 // Individual letter tile with digit assignment and feedback coloring
 
 import type { FeedbackColor } from '../types';
+import { cn } from '../utils/classNames';
 
 interface LetterTileProps {
   letter: string;
@@ -21,13 +22,13 @@ export function LetterTile({
   onClick,
   disabled = false
 }: LetterTileProps) {
-  const classes = [
+  const classes = cn(
     'letter-tile',
     `feedback-${feedback}`,
     isSelected && !isPrimary && 'selected',
     isSelected && isPrimary && 'selected-primary',
     disabled && 'disabled'
-  ].filter(Boolean).join(' ');
+  );
 
   return (
     <button

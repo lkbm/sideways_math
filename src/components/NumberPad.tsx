@@ -1,5 +1,7 @@
 // Number pad for digit input (0-9)
 
+import { cn } from '../utils/classNames';
+
 interface NumberPadProps {
   selectedLetter: string | null;
   usedDigits: Set<number>;
@@ -7,26 +9,26 @@ interface NumberPadProps {
   onDigitClick: (digit: number) => void;
 }
 
+const DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0] as const;
+
 export function NumberPad({
   selectedLetter,
   usedDigits,
   eliminatedDigits,
   onDigitClick
 }: NumberPadProps) {
-  const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-
   return (
     <div class="number-pad">
-      {digits.map(digit => {
+      {DIGITS.map(digit => {
         const isUsed = usedDigits.has(digit);
         const isEliminated = eliminatedDigits.has(digit);
         const isDisabled = !selectedLetter || isEliminated;
 
-        const classes = [
+        const classes = cn(
           'digit-btn',
           isUsed && 'used',
           isEliminated && 'eliminated'
-        ].filter(Boolean).join(' ');
+        );
 
         return (
           <button

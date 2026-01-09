@@ -34,9 +34,12 @@ src/
 ├── shared/
 │   └── puzzleGenerator.ts   # Deterministic puzzle generation (used by both client & server)
 ├── hooks/
-│   └── useGameState.ts      # Central game state management
+│   ├── useGameState.ts      # Central game state management
+│   ├── useTileGrid.ts       # Tile grid computation for spatial navigation
+│   └── useKeyboardNavigation.ts # Keyboard event handling (arrows, Tab, Enter, digits)
 ├── components/
 │   ├── Game.tsx             # Main game layout
+│   ├── Modal.tsx            # Reusable modal wrapper with overlay
 │   ├── EquationDisplay.tsx  # Shows the puzzle equation
 │   ├── MappingPanel.tsx     # Letter-to-digit mapping UI
 │   ├── NumberPad.tsx        # Digit input buttons
@@ -54,8 +57,7 @@ src/
     ├── solver.ts            # Cryptarithmetic solver (backtracking)
     ├── feedback.ts          # Guess feedback calculation (green/yellow/gray)
     ├── wordList.ts          # WORDS_BY_LENGTH dictionary
-    ├── puzzleGenerator.ts   # Legacy (now just re-exports from shared)
-    └── precomputedPuzzles.ts # Fallback puzzles (no longer primary source)
+    └── classNames.ts        # cn() utility for conditional class names
 ```
 
 ### Key Files
@@ -117,6 +119,42 @@ The game uses a central state hook (`useGameState`) with:
 - **Green**: Correct digit for this letter
 - **Yellow**: Digit exists in solution but wrong letter
 - **Gray**: Digit not in solution
+
+## Code Style & Utilities
+
+### Shared Utilities
+
+**`cn()` - Conditional Class Names** (`src/utils/classNames.ts`)
+- Simple utility for building conditional class names
+- Usage: `cn('base-class', condition && 'conditional-class', anotherCondition && 'another-class')`
+- Replaces verbose `.filter(Boolean).join(' ')` pattern
+- Use this for all conditional class name logic
+
+**`Modal` Component** (`src/components/Modal.tsx`)
+- Reusable modal wrapper with overlay and click-outside-to-close behavior
+- Used by all modals (HelpModal, ArchiveModal, GameEndModal)
+- Props: `isOpen`, `onClose`, `children`
+- Handles overlay click, escape key, and accessibility
+
+### Custom Hooks
+
+**`useTileGrid()`** (`src/hooks/useTileGrid.ts`)
+- Computes tile positions for spatial keyboard navigation
+- Returns `TileGrid` with `getNeighbor()` method for arrow key movement
+- Used by Game.tsx for arrow key navigation between letter tiles
+
+**`useKeyboardNavigation()`** (`src/hooks/useKeyboardNavigation.ts`)
+- Centralized keyboard event handling for the game
+- Handles: arrow keys, Tab, Enter, Escape, digit input, Backspace
+- Integrates with tile grid for spatial navigation
+- Used by Game.tsx
+
+### Style Conventions
+
+- **Don't add explicit return types to components** - TypeScript inference works great, and components often need to return `null` or other union types
+- **Extract constants to module level** - Keep magic values (e.g., `DIGITS`, `DIFFICULTY_OPTIONS`) as top-level constants
+- **Prefer custom hooks for complex logic** - If a component has >150 lines, consider extracting state/effects into custom hooks
+- **Use `cn()` for conditional classes** - Avoid verbose array filtering patterns
 
 ## PM Notes
 This is a "daily puzzle" type game, but with a playable archive, and multiple difficulty levels/puzzle types.

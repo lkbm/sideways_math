@@ -1,6 +1,7 @@
 // Panel showing letter-to-digit mappings as an alternative input method
 
 import type { FeedbackColor } from '../types';
+import { cn } from '../utils/classNames';
 
 interface MappingPanelProps {
   letters: string[];
@@ -26,12 +27,12 @@ export function MappingPanel({
         const isSelected = selectedLetter === letter;
         const digit = currentGuess[letter];
 
-        const classes = [
+        const classes = cn(
           'mapping-row',
           `feedback-${color}`,
           isSelected && 'selected',
           disabled && 'disabled'
-        ].filter(Boolean).join(' ');
+        );
 
         return (
           <button

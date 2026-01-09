@@ -5,6 +5,8 @@ import {
 	getDateForPuzzle,
 	formatDateShort,
 } from "../utils/dailyPuzzle";
+import { cn } from "../utils/classNames";
+import { Modal } from "./Modal";
 
 interface ArchiveModalProps {
 	currentPuzzleNumber: number;
@@ -19,8 +21,8 @@ export function ArchiveModal({
 }: ArchiveModalProps) {
 	const todayNumber = getTodaysPuzzleNumber();
 
-	// Show puzzles in reverse order (newest first), grouped by weeks
-	// For now, show the last 30 puzzles or all available, whichever is smaller
+	// Show puzzles in reverse order (newest first)
+	// Show the last 30 puzzles or all available, whichever is smaller
 	const maxToShow = Math.min(todayNumber, 30);
 	const puzzleNumbers = Array.from(
 		{ length: maxToShow },
@@ -28,45 +30,40 @@ export function ArchiveModal({
 	);
 
 	return (
-		<div class="modal-overlay" onClick={onClose}>
-			<div
-				class="modal archive-modal"
-				onClick={(e) => e.stopPropagation()}
-			>
-				<h2>Puzzle Archive</h2>
-				<p class="archive-subtitle">Play any past puzzle</p>
+		<Modal onOverlayClick={onClose} className="archive-modal">
+			<h2>Puzzle Archive</h2>
+			<p class="archive-subtitle">Play any past puzzle</p>
 
-				<div class="archive-grid">
-					{puzzleNumbers.map((num) => {
-						const date = getDateForPuzzle(num);
-						const isToday = num === todayNumber;
-						const isCurrent = num === currentPuzzleNumber;
+			<div class="archive-grid">
+				{puzzleNumbers.map((num) => {
+					const date = getDateForPuzzle(num);
+					const isToday = num === todayNumber;
+					const isCurrent = num === currentPuzzleNumber;
 
-						return (
-							<button
-								key={num}
-								class={`archive-puzzle ${isToday ? "today" : ""} ${isCurrent ? "current" : ""}`}
-								onClick={() => {
-									onSelectPuzzle(num);
-									onClose();
-								}}
-								type="button"
-							>
-								<span class="archive-puzzle-number">
-									#{num}
-								</span>
-								<span class="archive-puzzle-date">
-									{isToday ? "Today" : formatDateShort(date)}
-								</span>
-							</button>
-						);
-					})}
-				</div>
+					function handleSelect(): void {
+						onSelectPuzzle(num);
+						onClose();
+					}
 
-				<button class="btn btn-secondary" onClick={onClose}>
-					Close
-				</button>
+					return (
+						<button
+							key={num}
+							class={cn("archive-puzzle", isToday && "today", isCurrent && "current")}
+							onClick={handleSelect}
+							type="button"
+						>
+							<span class="archive-puzzle-number">#{num}</span>
+							<span class="archive-puzzle-date">
+								{isToday ? "Today" : formatDateShort(date)}
+							</span>
+						</button>
+					);
+				})}
 			</div>
-		</div>
+
+			<button class="btn btn-secondary" onClick={onClose} type="button">
+				Close
+			</button>
+		</Modal>
 	);
 }

@@ -1,9 +1,11 @@
 // Main game container that orchestrates all components
 
-import { useState, useEffect, useMemo, useRef } from 'preact/hooks';
+import { useState, useEffect, useRef } from 'preact/hooks';
 import type { Difficulty } from '../types';
 import { useGameState } from '../hooks/useGameState';
 import { useUnlockState } from '../hooks/useUnlockState';
+import { useTileGrid } from '../hooks/useTileGrid';
+import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation';
 import { EquationDisplay } from './EquationDisplay';
 import { MappingPanel } from './MappingPanel';
 import { NumberPad } from './NumberPad';
@@ -22,6 +24,9 @@ export function Game() {
   const [showDifficulty, setShowDifficulty] = useState(false);
   const [showArchive, setShowArchive] = useState(false);
 
+  const tileGrid = useTileGrid(state.puzzle);
+  const isGameOver = state.gameStatus === 'won' || state.gameStatus === 'lost';
+
   // Track previous game status to detect wins
   const prevGameStatus = useRef(state.gameStatus);
 
@@ -33,28 +38,59 @@ export function Game() {
     prevGameStatus.current = state.gameStatus;
   }, [state.gameStatus, state.puzzle, state.puzzleDate, recordWin]);
 
-  // Handle clearing the current guess
-  const handleClear = () => {
+  // Keyboard navigation
+  useKeyboardNavigation({
+    letters: state.puzzle?.letters ?? [],
+    selectedLetter: state.selectedLetter,
+    primaryTileId: state.primaryTileId,
+    tileGrid,
+    canSubmit: derived.canSubmit,
+    isGameOver,
+    onSelectLetter: actions.selectLetter,
+    onAssignDigit: actions.assignDigit,
+    onClearLetter: actions.clearLetter,
+    onSubmit: actions.submitGuess
+  });
+
+  function handleClear(): void {
     if (!state.puzzle) return;
     for (const letter of state.puzzle.letters) {
       actions.clearLetter(letter);
     }
-  };
+  }
 
-  // Handle game end modal actions
-  const handleNewGame = (difficulty: Difficulty) => {
+  function handleNewGame(difficulty: Difficulty): void {
     actions.startNewGame(difficulty);
     setShowDifficulty(false);
-  };
+  }
 
-  const handleShowDifficulty = () => {
-    setShowDifficulty(true);
-  };
-
-  // Handle archive selection
-  const handleSelectPuzzle = (puzzleNumber: number) => {
+  function handleSelectPuzzle(puzzleNumber: number): void {
     actions.goToPuzzle(puzzleNumber);
-  };
+  }
+
+  // Shared header for all states
+  const header = (
+    <PuzzleHeader
+      puzzleNumber={state.puzzleNumber}
+      puzzleDate={state.puzzleDate}
+      onArchiveClick={() => setShowArchive(true)}
+      onHelpClick={() => setShowHelp(true)}
+    />
+  );
+
+  // Shared modals
+  const modals = (
+    <>
+      {showHelp && <HelpModal onClose={() => setShowHelp(false)} />}
+      {showArchive && (
+        <ArchiveModal
+          currentPuzzleNumber={state.puzzleNumber}
+          onSelectPuzzle={handleSelectPuzzle}
+          onClose={() => setShowArchive(false)}
+        />
+      )}
+    </>
+  );
 
   // Loading state
   if (state.gameStatus === 'loading' || !state.puzzle) {
@@ -62,23 +98,11 @@ export function Game() {
       <div class="game-wrapper">
         <div class="game">
           <div class="game-content">
-            <PuzzleHeader
-              puzzleNumber={state.puzzleNumber}
-              puzzleDate={state.puzzleDate}
-              onArchiveClick={() => setShowArchive(true)}
-              onHelpClick={() => setShowHelp(true)}
-            />
+            {header}
             <div class="loading">Loading puzzle...</div>
           </div>
         </div>
-        {showHelp && <HelpModal onClose={() => setShowHelp(false)} />}
-        {showArchive && (
-          <ArchiveModal
-            currentPuzzleNumber={state.puzzleNumber}
-            onSelectPuzzle={handleSelectPuzzle}
-            onClose={() => setShowArchive(false)}
-          />
-        )}
+        {modals}
       </div>
     );
   }
@@ -89,175 +113,23 @@ export function Game() {
       <div class="game-wrapper">
         <div class="game">
           <div class="game-content">
-            <PuzzleHeader
-              puzzleNumber={state.puzzleNumber}
-              puzzleDate={state.puzzleDate}
-              onArchiveClick={() => setShowArchive(true)}
-              onHelpClick={() => setShowHelp(true)}
-            />
+            {header}
             <DifficultySelector
               onSelect={handleNewGame}
               unlockedDifficulties={unlockedDifficulties}
             />
           </div>
         </div>
-        {showHelp && <HelpModal onClose={() => setShowHelp(false)} />}
-        {showArchive && (
-          <ArchiveModal
-            currentPuzzleNumber={state.puzzleNumber}
-            onSelectPuzzle={handleSelectPuzzle}
-            onClose={() => setShowArchive(false)}
-          />
-        )}
+        {modals}
       </div>
     );
   }
-
-  const isGameOver = state.gameStatus === 'won' || state.gameStatus === 'lost';
-
-  // Build a grid of tiles for spatial navigation
-  // Each tile has { letter, tileId, row, col } where col is right-aligned
-  const tileGrid = useMemo(() => {
-    if (!state.puzzle) return { tiles: [], maxLength: 0, rowCount: 0 };
-
-    const allWords = [...state.puzzle.operands, state.puzzle.result];
-    const maxLength = Math.max(...allWords.map(w => w.length));
-    const tiles: Array<{ letter: string; tileId: string; row: number; col: number }> = [];
-
-    allWords.forEach((word, wordIndex) => {
-      const padding = maxLength - word.length;
-      word.split('').forEach((letter, charIndex) => {
-        tiles.push({
-          letter,
-          tileId: `${wordIndex}-${charIndex}`,
-          row: wordIndex,
-          col: padding + charIndex // Right-aligned
-        });
-      });
-    });
-
-    return { tiles, maxLength, rowCount: allWords.length };
-  }, [state.puzzle]);
-
-  // Handle keyboard input for navigation and digit assignment
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (isGameOver) return;
-
-      const letters = state.puzzle?.letters ?? [];
-
-      // Enter to submit guess
-      if (e.key === 'Enter' && derived.canSubmit) {
-        e.preventDefault();
-        actions.submitGuess();
-        return;
-      }
-
-      // Tab / Shift+Tab to navigate between unique letters
-      if (e.key === 'Tab' && letters.length > 0) {
-        e.preventDefault();
-        const currentIndex = state.selectedLetter
-          ? letters.indexOf(state.selectedLetter)
-          : -1;
-
-        let nextIndex: number;
-        if (e.shiftKey) {
-          nextIndex = currentIndex <= 0 ? letters.length - 1 : currentIndex - 1;
-        } else {
-          nextIndex = currentIndex >= letters.length - 1 ? 0 : currentIndex + 1;
-        }
-        actions.selectLetter(letters[nextIndex]);
-        return;
-      }
-
-      // Arrow keys for spatial navigation within the equation grid
-      if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown') && tileGrid.tiles.length > 0) {
-        e.preventDefault();
-
-        // Find current tile position
-        let currentTile = tileGrid.tiles.find(t => t.tileId === state.primaryTileId);
-
-        // If no primary tile but we have a selected letter, find first tile with that letter
-        if (!currentTile && state.selectedLetter) {
-          currentTile = tileGrid.tiles.find(t => t.letter === state.selectedLetter);
-        }
-
-        // If still nothing, start at first tile
-        if (!currentTile) {
-          const firstTile = tileGrid.tiles[0];
-          actions.selectLetter(firstTile.letter, firstTile.tileId);
-          return;
-        }
-
-        let targetRow = currentTile.row;
-        let targetCol = currentTile.col;
-
-        if (e.key === 'ArrowLeft') {
-          targetCol--;
-        } else if (e.key === 'ArrowRight') {
-          targetCol++;
-        } else if (e.key === 'ArrowUp') {
-          targetRow--;
-        } else if (e.key === 'ArrowDown') {
-          targetRow++;
-        }
-
-        // Wrap rows
-        if (targetRow < 0) targetRow = tileGrid.rowCount - 1;
-        if (targetRow >= tileGrid.rowCount) targetRow = 0;
-
-        // Find tile at target position, or nearest tile in that row
-        let targetTile = tileGrid.tiles.find(t => t.row === targetRow && t.col === targetCol);
-
-        if (!targetTile) {
-          // Find tiles in target row and pick the closest column
-          const rowTiles = tileGrid.tiles.filter(t => t.row === targetRow);
-          if (rowTiles.length > 0) {
-            targetTile = rowTiles.reduce((closest, t) =>
-              Math.abs(t.col - targetCol) < Math.abs(closest.col - targetCol) ? t : closest
-            );
-          }
-        }
-
-        if (targetTile) {
-          actions.selectLetter(targetTile.letter, targetTile.tileId);
-        }
-        return;
-      }
-
-      // The following require a selected letter
-      if (!state.selectedLetter) return;
-
-      // Check if it's a digit key (0-9)
-      if (e.key >= '0' && e.key <= '9') {
-        actions.assignDigit(parseInt(e.key, 10));
-      }
-
-      // Backspace to clear the selected letter's value
-      if (e.key === 'Backspace') {
-        actions.clearLetter(state.selectedLetter);
-      }
-
-      // Escape to deselect
-      if (e.key === 'Escape') {
-        actions.selectLetter(state.selectedLetter); // Toggle off
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [state.selectedLetter, state.primaryTileId, state.puzzle?.letters, tileGrid, isGameOver, derived.canSubmit, actions]);
 
   return (
     <div class="game-wrapper">
       <div class="game">
         <div class="game-content">
-          <PuzzleHeader
-            puzzleNumber={state.puzzleNumber}
-            puzzleDate={state.puzzleDate}
-            onArchiveClick={() => setShowArchive(true)}
-            onHelpClick={() => setShowHelp(true)}
-          />
+          {header}
 
           <EquationDisplay
             puzzle={state.puzzle}
@@ -307,20 +179,12 @@ export function Game() {
           guessCount={state.guessHistory.length}
           unlockedDifficulties={unlockedDifficulties}
           onNewGame={handleNewGame}
-          onShowDifficulty={handleShowDifficulty}
+          onShowDifficulty={() => setShowDifficulty(true)}
           onShowArchive={() => setShowArchive(true)}
         />
       )}
 
-      {showHelp && <HelpModal onClose={() => setShowHelp(false)} />}
-
-      {showArchive && (
-        <ArchiveModal
-          currentPuzzleNumber={state.puzzleNumber}
-          onSelectPuzzle={handleSelectPuzzle}
-          onClose={() => setShowArchive(false)}
-        />
-      )}
+      {modals}
     </div>
   );
 }
