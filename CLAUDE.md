@@ -163,7 +163,6 @@ Maybe a "first solver of the day" leaderboard later on, but not a priority.
 * Stats tracking (streak, solve counts by difficulty, one-guess rate)
 * Sharing (green/yellow dots per difficulty + streak)
 * Mobile polish (test and fix touch targets, layout, etc.)
-* Win celebration: subtle, scales by difficulty (no confetti)
 * TEST: One-time difficulty unlock (beat Easy once → Medium unlocks permanently)
 * Figure out additional accessibility improvements
 * Why six guesses?
