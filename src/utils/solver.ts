@@ -108,7 +108,7 @@ function isPartiallyConsistent(
     // If both operand column and result are fully assigned, check consistency
     if (allAssigned && resultAssigned) {
       const expectedDigit = sum % 10;
-      if (assignment[resultLetter!] !== expectedDigit) {
+      if (assignment[resultLetter] !== expectedDigit) {
         return false;
       }
       carry = Math.floor(sum / 10);

@@ -20,7 +20,7 @@ async function fetchPuzzle(difficulty: Difficulty, puzzleNumber: number): Promis
     if (!response.ok) {
       throw new Error(`API returned ${response.status}`);
     }
-    return await response.json() as Puzzle;
+    return await response.json();
   } catch {
     // Fallback to client-side generation if API fails or times out
     // This uses the same deterministic algorithm, so results are identical
@@ -49,7 +49,7 @@ export function useGameState() {
   // Start with today's puzzle on mount
   // Default to 'easy' - unlock system will guide progression
   useEffect(() => {
-    loadPuzzle('easy', todayNumber);
+    void loadPuzzle('easy', todayNumber);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only run on mount
   }, []);
 
@@ -191,17 +191,17 @@ export function useGameState() {
 
   // Start a new game with the current puzzle number (for difficulty change)
   const startNewGame = useCallback((difficulty: Difficulty) => {
-    loadPuzzle(difficulty, state.puzzleNumber);
+    void loadPuzzle(difficulty, state.puzzleNumber);
   }, [loadPuzzle, state.puzzleNumber]);
 
   // Switch to a different puzzle number (from archive)
   const goToPuzzle = useCallback((puzzleNumber: number, difficulty: Difficulty = 'medium') => {
-    loadPuzzle(difficulty, puzzleNumber);
+    void loadPuzzle(difficulty, puzzleNumber);
   }, [loadPuzzle]);
 
   // Go to today's puzzle
   const goToToday = useCallback((difficulty: Difficulty = 'medium') => {
-    loadPuzzle(difficulty, getTodaysPuzzleNumber());
+    void loadPuzzle(difficulty, getTodaysPuzzleNumber());
   }, [loadPuzzle]);
 
   // Derived state

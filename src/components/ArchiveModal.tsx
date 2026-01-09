@@ -4,9 +4,9 @@ import {
 	getTodaysPuzzleNumber,
 	getDateForPuzzle,
 	formatDateShort,
-} from "../utils/dailyPuzzle";
-import { cn } from "../utils/classNames";
-import { Modal } from "./Modal";
+} from '../utils/dailyPuzzle';
+import { cn } from '../utils/classNames';
+import { Modal } from './Modal';
 
 interface ArchiveModalProps {
 	currentPuzzleNumber: number;
@@ -48,13 +48,13 @@ export function ArchiveModal({
 					return (
 						<button
 							key={num}
-							class={cn("archive-puzzle", isToday && "today", isCurrent && "current")}
+							class={cn('archive-puzzle', isToday && 'today', isCurrent && 'current')}
 							onClick={handleSelect}
 							type="button"
 						>
 							<span class="archive-puzzle-number">#{num}</span>
 							<span class="archive-puzzle-date">
-								{isToday ? "Today" : formatDateShort(date)}
+								{isToday ? 'Today' : formatDateShort(date)}
 							</span>
 						</button>
 					);

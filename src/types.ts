@@ -1,8 +1,8 @@
 // Core game types for Sideways Arithmetic
 
-export type FeedbackColor = "green" | "yellow" | "gray" | "none";
+export type FeedbackColor = 'green' | 'yellow' | 'gray' | 'none';
 
-export type Difficulty = "easy" | "medium" | "hard";
+export type Difficulty = 'easy' | 'medium' | 'hard';
 
 export interface Puzzle {
 	id: string;
@@ -26,7 +26,7 @@ export interface GameState {
 	guessHistory: GuessAttempt[];
 	selectedLetter: string | null;
 	primaryTileId: string | null; // Which specific tile instance is focused
-	gameStatus: "loading" | "playing" | "won" | "lost";
+	gameStatus: 'loading' | 'playing' | 'won' | 'lost';
 	maxGuesses: number;
 	// Daily puzzle state
 	puzzleNumber: number;

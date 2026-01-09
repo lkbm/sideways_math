@@ -28,6 +28,7 @@ export default tseslint.config(
       ...react.configs['jsx-runtime'].rules,
       // Preact uses 'class' instead of 'className'
       'react/no-unknown-property': ['error', { ignore: ['class'] }],
+      'quotes': ['error', 'single', { 'avoidEscape': true }],
     },
   },
 )

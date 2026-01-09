@@ -19,6 +19,7 @@
 	"devDependencies": {
 		"@eslint/js": "^9.17.0",
 		"@prefresh/vite": "^2.4.6",
+		"@types/node": "^25.0.3",
 		"@vitejs/plugin-react": "^4.3.4",
 		"eslint": "^9.17.0",
 		"eslint-plugin-react": "^7.37.5",

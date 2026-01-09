@@ -15,7 +15,7 @@ interface UnlockData {
 
 const DEFAULT_UNLOCKS: UnlockData = {
   unlockedDifficulties: ['easy'], // Easy is always unlocked
-  completions: {}
+  completions: {},
 };
 
 // Difficulty progression order
@@ -60,13 +60,16 @@ export function useUnlockState() {
   }, [unlockData]);
 
   // Check if a difficulty is unlocked
-  const isUnlocked = useCallback((difficulty: Difficulty): boolean => {
-    return unlockData.unlockedDifficulties.includes(difficulty);
-  }, [unlockData.unlockedDifficulties]);
+  const isUnlocked = useCallback(
+    (difficulty: Difficulty): boolean => {
+      return unlockData.unlockedDifficulties.includes(difficulty);
+    },
+    [unlockData.unlockedDifficulties],
+  );
 
   // Record a win and potentially unlock the next difficulty
   const recordWin = useCallback((difficulty: Difficulty, puzzleDate: Date): void => {
-    setUnlockData(prev => {
+    setUnlockData((prev) => {
       const dateKey = puzzleDate.toISOString().split('T')[0];
       const dayCompletions = prev.completions[dateKey] || [];
 
@@ -77,12 +80,12 @@ export function useUnlockState() {
 
       const newCompletions = {
         ...prev.completions,
-        [dateKey]: [...dayCompletions, difficulty]
+        [dateKey]: [...dayCompletions, difficulty],
       };
 
       // Check if we should unlock the next difficulty
       const nextDifficulty = getNextDifficulty(difficulty);
-      let newUnlocked = [...prev.unlockedDifficulties];
+      const newUnlocked = [...prev.unlockedDifficulties];
 
       if (nextDifficulty && !newUnlocked.includes(nextDifficulty)) {
         newUnlocked.push(nextDifficulty);
@@ -90,7 +93,7 @@ export function useUnlockState() {
 
       return {
         unlockedDifficulties: newUnlocked,
-        completions: newCompletions
+        completions: newCompletions,
       };
     });
   }, []);
@@ -99,15 +102,18 @@ export function useUnlockState() {
   const unlockedDifficulties = unlockData.unlockedDifficulties;
 
   // Check if a puzzle was completed on a given date
-  const wasCompletedOnDate = useCallback((difficulty: Difficulty, date: Date): boolean => {
-    const dateKey = date.toISOString().split('T')[0];
-    return unlockData.completions[dateKey]?.includes(difficulty) ?? false;
-  }, [unlockData.completions]);
+  const wasCompletedOnDate = useCallback(
+    (difficulty: Difficulty, date: Date): boolean => {
+      const dateKey = date.toISOString().split('T')[0];
+      return unlockData.completions[dateKey]?.includes(difficulty) ?? false;
+    },
+    [unlockData.completions],
+  );
 
   return {
     isUnlocked,
     unlockedDifficulties,
     recordWin,
-    wasCompletedOnDate
+    wasCompletedOnDate,
   };
 }

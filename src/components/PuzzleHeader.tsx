@@ -1,6 +1,6 @@
 // Puzzle header showing puzzle number, date, and archive access
 
-import { formatDate } from "../utils/dailyPuzzle";
+import { formatDate } from '../utils/dailyPuzzle';
 
 interface PuzzleHeaderProps {
 	puzzleNumber: number;
@@ -40,7 +40,7 @@ export function PuzzleHeader({
 						viewBox="0 0 24 24"
 						fill="none"
 						stroke="currentColor"
-						stroke-width="2"
+						strokeWidth="2"
 					>
 						<rect x="3" y="4" width="18" height="4" rx="1" />
 						<path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8" />

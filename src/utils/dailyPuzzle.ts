@@ -1,11 +1,11 @@
 // Daily puzzle utilities - deterministic puzzle selection based on date
 
-import type { Difficulty, Puzzle } from "../types";
-import { generatePuzzleForSeed } from "../shared/puzzleGenerator";
+import type { Difficulty, Puzzle } from '../types';
+import { generatePuzzleForSeed } from '../shared/puzzleGenerator';
 
 // Launch date - Puzzle #1 starts here
 // Using a date in the past so we have an archive from day 1
-export const LAUNCH_DATE = new Date("2024-01-01"); // LKBM TODO
+export const LAUNCH_DATE = new Date('2024-01-01'); // LKBM TODO
 
 // Get puzzle number for a given date (1-indexed)
 export function getPuzzleNumber(date: Date = new Date()): number {
@@ -31,18 +31,18 @@ export function getDateForPuzzle(puzzleNumber: number): Date {
 
 // Format date for display (e.g., "January 3, 2026")
 export function formatDate(date: Date): string {
-	return date.toLocaleDateString("en-US", {
-		year: "numeric",
-		month: "long",
-		day: "numeric",
+	return date.toLocaleDateString('en-US', {
+		year: 'numeric',
+		month: 'long',
+		day: 'numeric',
 	});
 }
 
 // Format date short (e.g., "Jan 3")
 export function formatDateShort(date: Date): string {
-	return date.toLocaleDateString("en-US", {
-		month: "short",
-		day: "numeric",
+	return date.toLocaleDateString('en-US', {
+		month: 'short',
+		day: 'numeric',
 	});
 }
 

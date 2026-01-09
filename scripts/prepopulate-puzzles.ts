@@ -47,7 +47,7 @@ interface KVPair {
   value: string;
 }
 
-async function uploadBatch(pairs: KVPair[], batchNum: number, totalBatches: number) {
+function uploadBatch(pairs: KVPair[], batchNum: number, totalBatches: number) {
   const tempFile = `/tmp/kv-batch-${Date.now()}.json`;
 
   try {
@@ -66,7 +66,7 @@ async function uploadBatch(pairs: KVPair[], batchNum: number, totalBatches: numb
   }
 }
 
-async function main() {
+function main() {
   const { from, to, difficulties } = parseArgs();
   const total = (to - from + 1) * difficulties.length;
 
@@ -102,10 +102,10 @@ async function main() {
   for (let i = 0; i < allPairs.length; i += BATCH_SIZE) {
     const batch = allPairs.slice(i, i + BATCH_SIZE);
     const batchNum = Math.floor(i / BATCH_SIZE) + 1;
-    await uploadBatch(batch, batchNum, totalBatches);
+    uploadBatch(batch, batchNum, totalBatches);
   }
 
   console.log(`\nDone! Uploaded ${allPairs.length} puzzles to KV.`);
 }
 
-main().catch(console.error);
+main();
