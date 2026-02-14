@@ -66,7 +66,7 @@ export function EquationDisplay({
       {puzzle.operands.map((word, i) => (
         renderWord(word, i, i === puzzle.operands.length - 1 ? '+' : undefined)
       ))}
-      <div class="equation-line" style={{ width: `${(maxLength * 56) + 30}px` }} />
+      <div class="equation-line" />
       {renderWord(puzzle.result, puzzle.operands.length)}
     </div>
   );

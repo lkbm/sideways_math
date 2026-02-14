@@ -26,6 +26,14 @@
   --font-display: 'Kalam', cursive;
   --font-body: 'Patrick Hand', cursive;
 
+  /* Tile sizing (responsive, overridden in media queries) */
+  --tile-w: 52px;
+  --tile-h: 66px;
+  --tile-gap: 6px;
+  --operator-w: 32px;
+  --history-tile-w: 42px;
+  --history-tile-h: 50px;
+
   /* Ball colors - Wayside School style */
   --ball-green: #2d936c;
   --ball-red: #e63946;
@@ -450,11 +458,12 @@ body {
    ======================================== */
 
 .equation-vertical {
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
+  align-self: center;
   padding: 1rem 0;
-  gap: 6px;
+  gap: var(--tile-gap);
 }
 
 .equation-row {
@@ -467,29 +476,30 @@ body {
   font-size: 2rem;
   font-weight: bold;
   color: var(--pencil-gray);
-  width: 32px;
+  width: var(--operator-w);
   text-align: center;
 }
 
 .vertical-operator-spacer {
-  width: 32px;
+  width: var(--operator-w);
 }
 
 .equation-line {
   height: 3px;
   background: var(--pencil-gray);
-  margin: 6px 0;
+  margin: var(--tile-gap) 0;
   border-radius: 1px;
+  align-self: stretch;
 }
 
 .word {
   display: flex;
-  gap: 6px;
+  gap: var(--tile-gap);
 }
 
 .letter-tile-spacer {
-  width: 52px;
-  height: 66px;
+  width: var(--tile-w);
+  height: var(--tile-h);
 }
 
 /* ========================================
@@ -497,8 +507,8 @@ body {
    ======================================== */
 
 .letter-tile {
-  width: 52px;
-  height: 66px;
+  width: var(--tile-w);
+  height: var(--tile-h);
   border: 2px solid var(--color-light-gray);
   border-radius: 6px;
   display: flex;
@@ -930,8 +940,8 @@ body {
 }
 
 .history-tile {
-  width: 42px;
-  height: 50px;
+  width: var(--history-tile-w);
+  height: var(--history-tile-h);
   border-radius: 5px;
   display: flex;
   flex-direction: column;
@@ -1291,6 +1301,13 @@ body {
    ======================================== */
 
 @media (max-width: 600px) {
+  :root {
+    --tile-w: 44px;
+    --tile-h: 56px;
+    --history-tile-w: 36px;
+    --history-tile-h: 44px;
+  }
+
   .game-wrapper {
     padding: 1rem;
   }
@@ -1310,11 +1327,7 @@ body {
 
   .game-content {
     transform: rotate(1deg); /* Paper at -2deg, content at -1deg net */
-  }
-
-  .letter-tile {
-    width: 44px;
-    height: 56px;
+    gap: 1rem;
   }
 
   .letter-tile .letter {
@@ -1327,36 +1340,32 @@ body {
 
   .number-pad {
     max-width: 280px;
+    padding: 0.75rem;
   }
 
   .digit-btn {
     font-size: 1.4rem;
   }
-
-  .history-tile {
-    width: 36px;
-    height: 44px;
-  }
-
-  .ball-red {
-    width: 50px;
-    height: 50px;
-  }
-
-  .ball-blue {
-    width: 45px;
-    height: 45px;
-  }
-
-  .ball-yellow {
-    width: 40px;
-    height: 40px;
-  }
 }
 
-@media (max-width: 380px) {
+@media (max-width: 420px) {
+  :root {
+    --tile-w: 36px;
+    --tile-h: 46px;
+    --tile-gap: 4px;
+    --operator-w: 24px;
+    --history-tile-w: 30px;
+    --history-tile-h: 38px;
+  }
+
   .game {
     padding: 1rem 1.5rem 1rem 2.5rem;
+    transform: rotate(-1.5deg);
+  }
+
+  .game-content {
+    transform: rotate(0.75deg);
+    gap: 0.75rem;
   }
 
   .game::before {
@@ -1365,7 +1374,154 @@ body {
   }
 
   .header h1 {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
+  }
+
+  .vertical-operator {
+    font-size: 1.5rem;
+  }
+
+  .letter-tile .letter {
+    font-size: 1.2rem;
+  }
+
+  .letter-tile .digit {
+    font-size: 0.8rem;
+  }
+
+  .number-pad {
+    max-width: 240px;
+    padding: 0.5rem;
+    gap: 0.4rem;
+  }
+
+  .digit-btn {
+    font-size: 1.2rem;
+  }
+
+  .mapping-row {
+    padding: 0.35rem 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  .mapping-panel {
+    gap: 0.35rem;
+    padding: 0.35rem;
+  }
+
+  .btn {
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+  }
+
+  .history-letter {
+    font-size: 0.85rem;
+  }
+
+  .history-digit {
+    font-size: 0.7rem;
+  }
+
+  .guess-tiles {
+    gap: 3px;
+  }
+}
+
+@media (max-width: 340px) {
+  :root {
+    --tile-w: 30px;
+    --tile-h: 40px;
+    --tile-gap: 3px;
+    --operator-w: 20px;
+    --history-tile-w: 26px;
+    --history-tile-h: 34px;
+  }
+
+  .game {
+    padding: 0.75rem 1rem 0.75rem 2rem;
+    transform: rotate(-1deg);
+  }
+
+  .game-content {
+    transform: rotate(0.5deg);
+    gap: 0.5rem;
+  }
+
+  .header h1 {
+    font-size: 1.2rem;
+  }
+
+  .puzzle-info {
+    font-size: 0.8rem;
+    gap: 0.5rem;
+  }
+
+  .archive-btn, .help-btn, .music-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .help-btn {
+    font-size: 1.2rem;
+  }
+
+  .vertical-operator {
+    font-size: 1.3rem;
+  }
+
+  .letter-tile .letter {
+    font-size: 1rem;
+  }
+
+  .letter-tile .digit {
+    font-size: 0.7rem;
+  }
+
+  .number-pad {
+    max-width: 200px;
+    padding: 0.4rem;
+    gap: 0.3rem;
+  }
+
+  .digit-btn {
+    font-size: 1rem;
+  }
+
+  .mapping-row {
+    padding: 0.25rem 0.4rem;
+    font-size: 0.85rem;
+    gap: 0.15rem;
+  }
+
+  .mapping-panel {
+    gap: 0.25rem;
+    padding: 0.25rem;
+  }
+
+  .btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .guess-counter {
+    font-size: 0.9rem;
+  }
+
+  .guess-tiles {
+    gap: 2px;
+  }
+
+  .history-letter {
+    font-size: 0.75rem;
+  }
+
+  .history-digit {
+    font-size: 0.6rem;
+  }
+
+  .guess-number {
+    width: 1.5rem;
+    font-size: 0.85rem;
   }
 }
 
