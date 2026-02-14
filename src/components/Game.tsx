@@ -6,6 +6,7 @@ import { useGameState } from '../hooks/useGameState';
 import { useUnlockState } from '../hooks/useUnlockState';
 import { useTileGrid } from '../hooks/useTileGrid';
 import { useKeyboardNavigation } from '../hooks/useKeyboardNavigation';
+import { useMusicPlayer } from '../hooks/useMusicPlayer';
 import { EquationDisplay } from './EquationDisplay';
 import { MappingPanel } from './MappingPanel';
 import { NumberPad } from './NumberPad';
@@ -20,6 +21,7 @@ import { ArchiveModal } from './ArchiveModal';
 export function Game() {
   const { state, derived, actions } = useGameState();
   const { unlockedDifficulties, recordWin } = useUnlockState();
+  const { isMusicEnabled, toggleMusic } = useMusicPlayer();
   const [showHelp, setShowHelp] = useState(false);
   const [showDifficulty, setShowDifficulty] = useState(false);
   const [showArchive, setShowArchive] = useState(false);
@@ -75,6 +77,8 @@ export function Game() {
       puzzleDate={state.puzzleDate}
       onArchiveClick={() => setShowArchive(true)}
       onHelpClick={() => setShowHelp(true)}
+      isMusicEnabled={isMusicEnabled}
+      onMusicToggle={toggleMusic}
     />
   );
 

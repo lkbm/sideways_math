@@ -196,7 +196,6 @@ Future ideas: bonus achievements (e.g., "solved Hard first"), time-based challen
 Maybe a "first solver of the day" leaderboard later on, but not a priority.
 
 ## V1 TODOs (Ship It)
-* Background music: bouncy, Commander Keen-like, on by default with visible toggle
 * Dark mode (3-way: System / Light / Dark)
 * Stats tracking (streak, solve counts by difficulty, one-guess rate)
 * Sharing (green/yellow dots per difficulty + streak)

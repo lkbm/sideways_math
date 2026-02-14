@@ -27,9 +27,9 @@ export function HelpModal({ onClose }: HelpModalProps) {
 
         <h3>Rules</h3>
         <ul>
-          <li>Each letter maps to exactly one digit</li>
-          <li>Each digit maps to at most one letter</li>
-          <li>The first letter of each word cannot be 0</li>
+          <li>Each letter maps to a distinct digit.</li>
+          <li>Each digit maps to a distinct letter.</li>
+          <li>The first letter of each word cannot be 0.</li>
         </ul>
 
         <h3>Feedback Colors</h3>
