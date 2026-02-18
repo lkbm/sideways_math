@@ -2,10 +2,6 @@ import { Hono } from 'hono';
 import type { Difficulty } from './types';
 import { generatePuzzleForSeed } from './shared/puzzleGenerator';
 
-export interface Env {
-	SIDEWAYSARITHMETIC: KVNamespace;
-}
-
 const app = new Hono<{ Bindings: Env }>();
 
 // Valid difficulties for validation
@@ -54,6 +50,7 @@ app.get('/api/state/:key', async (c) => {
 	return c.json({ value });
 });
 
+// TODO: Is this used? Should it have auth?
 app.put('/api/state/:key', async (c) => {
 	const key = c.req.param('key');
 	const { value } = await c.req.json<{ value: string }>();
