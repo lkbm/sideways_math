@@ -40,8 +40,10 @@ app.get('/api/puzzle/:difficulty/:number', async (c) => {
 	// Generate puzzle (deterministic, so safe to regenerate)
 	const puzzle = generatePuzzleForSeed(puzzleNumber, difficulty);
 
-	// Cache in KV (no expiration - puzzles are permanent)
-	await c.env.SIDEWAYSARITHMETIC.put(key, JSON.stringify(puzzle));
+	// Cache in KV after responding (no expiration - puzzles are permanent)
+	c.executionCtx.waitUntil(
+		c.env.SIDEWAYSARITHMETIC.put(key, JSON.stringify(puzzle))
+	);
 
 	return c.json(puzzle);
 });

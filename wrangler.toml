@@ -1,0 +1,15 @@
+name = "sideways-arithmetic"
+main = "src/main.tsx"
+compatibility_date = "2026-02-17"
+compatibility_flags = [ "nodejs_compat" ]
+
+
+[[kv_namespaces]]
+binding = "SIDEWAYSARITHMETIC"
+id = "04b53826bc2a4ed7a94ce0d5905a6676"
+
+[assets]
+directory = "./dist"
+
+[build]
+command = "npm run build"

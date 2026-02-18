@@ -211,3 +211,4 @@ Maybe a "first solver of the day" leaderboard later on, but not a priority.
 * Super-streaks and achievements
 * "First solver of the day" leaderboard
 * Add auth for cross-device stats syncing.
+* Consider: Use Queues and Workflows for async and background work
