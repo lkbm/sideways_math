@@ -4,10 +4,13 @@ A simple math puzzle built with preeact, TypeScript, Vite, and Cloudflare Worker
 
 You can see it deployed at https://sidewaysarithmetic.lucamasters.com/
 
+Remarkably, someone else wrote a Java version of Sideways Arithmetic mere days prior to me starting this project. You can see sedewolf's version at [https://github.com/sedewolf/SidewaysArithmetic](https://github.com/sedewolf/SidewaysArithmetic)
+
 # Run locally
 * nvm use
 * nvm install
 * npm run dev
+
 
 # Deploy
 
