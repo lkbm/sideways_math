@@ -6,11 +6,12 @@ You can see it deployed at https://sidewaysarithmetic.lucamasters.com/
 
 Remarkably, someone else wrote a Java version of Sideways Arithmetic mere days prior to me starting this project. You can see sedewolf's version at [https://github.com/sedewolf/SidewaysArithmetic](https://github.com/sedewolf/SidewaysArithmetic)
 
+Code is documented in [CLAUDE.md] and linked documents.
+
 # Run locally
 * nvm use
 * nvm install
 * npm run dev
-
 
 # Deploy
 
@@ -18,8 +19,8 @@ You'll need a wrangler.toml file configured for your Cloudflare account:
 ```
 name = "sideways-arithmetic"
 main = "src/main.tsx"
-compatibility_date = "2024-01-01"
-
+compatibility_date = "2026-03-18"
+compatibility_flags = [ "nodejs_compat" ]
 
 [[kv_namespaces]]
 binding = "SIDEWAYSARITHMETIC"
@@ -33,7 +34,7 @@ command = "npm run build"
 ```
 
 Then run:
-npx wrangler deploy
+`npx wrangler deploy`
 
 # React + TypeScript + Vite
 
